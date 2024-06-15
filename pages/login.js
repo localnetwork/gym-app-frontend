@@ -36,8 +36,8 @@ export default function Login() {
   };
 
   if (profile) {
-    window.location.href = "/";
-    // router.push("/");
+    // window.location.href = "/";
+    router.push("/");
     return <div>Loading</div>;
   }
 

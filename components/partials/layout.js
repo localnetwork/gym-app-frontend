@@ -1,4 +1,5 @@
 import AuthHeader from "./AuthHeader";
+import Footer from "./Footer";
 import Header from "./Header";
 import { useRouter } from "next/router";
 export default function Layout({ children, profile }) {
@@ -10,6 +11,7 @@ export default function Layout({ children, profile }) {
 
       {!profile && router.asPath != "/login" && <Header />}
       <main>{children}</main>
+      {!profile && router.asPath != "/login" && <Footer />}
     </div>
   );
 }
