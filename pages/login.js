@@ -47,13 +47,15 @@ export default function Login() {
         <title>Login</title>
       </Head>
       <div className="gradient-black min-h-[100vh] flex items-center justify-center flex-col p-[15px] md:p-[32px]">
-        <Image
-          src="/logo.webp"
-          alt="Logo"
-          width={100}
-          height={150}
-          className="max-w-[100px] mb-[30px]"
-        />
+        <Link href="/">
+          <Image
+            src="/logo.webp"
+            alt="Logo"
+            width={100}
+            height={150}
+            className="max-w-[100px] mb-[30px]"
+          />
+        </Link>
         <div className="max-w-[734px] w-full mx-auto py-[15px] md:py-[32px] bg-[#121212] px-[15px] rounded-[8px]">
           <div className="box-shadow py-[30px] rounded-[8px] px-[20px] w-full max-w-[400px] mx-auto">
             <h1 className="text-[32px] text-center font-bold my-[48px]">

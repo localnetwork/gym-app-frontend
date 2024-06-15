@@ -9,6 +9,10 @@ body {
   font-size: 16px;
 }
 
+.container {
+  @apply max-w-[1200px] mx-auto px-[15px];
+}
+
 @font-face {
   font-family: "Circular";
   src: url("/fonts/CircularSpotify-UI-Latin-OS2v3-Book.woff2");

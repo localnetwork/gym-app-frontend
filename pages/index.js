@@ -1,8 +1,9 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
-
+import HeroBanner from "@/components/blocks/HeroBanner";
 export default function Home() {
-  return <div></div>;
+  return (
+    <div>
+      <HeroBanner />
+    </div>
+  );
 }
