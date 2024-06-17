@@ -6,12 +6,12 @@ export default function Layout({ children, profile }) {
   const router = useRouter();
 
   return (
-    <div>
+    <div className="flex flex-col min-h-[100vh]">
       {profile && <AuthHeader profile={profile} />}
 
       {!profile && router.asPath != "/login" && <Header />}
-      <main>{children}</main>
-      {!profile && router.asPath != "/login" && <Footer />}
+      <main className="flex-grow">{children}</main>
+      {router.asPath != "/login" && <Footer />}
     </div>
   );
 }

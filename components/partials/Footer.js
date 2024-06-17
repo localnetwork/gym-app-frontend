@@ -72,16 +72,32 @@ export default function Footer() {
           </h3>
 
           <div className="flex">
-            <Link href="/" className="mr-[10px] hover:opacity-50">
+            <Link
+              target="_blank"
+              href="https://facebook.com/profile.php?id=100083270234483"
+              className="mr-[10px] hover:opacity-50"
+            >
               <Facebook />
             </Link>
-            <Link href="/" className="mr-[10px] hover:opacity-50">
+            <Link
+              target="_blank"
+              href="/"
+              className="mr-[10px] hover:opacity-50"
+            >
               <Instagram />
             </Link>
-            <Link href="/" className="mr-[10px] hover:opacity-50">
+            <Link
+              target="_blank"
+              href="/"
+              className="mr-[10px] hover:opacity-50"
+            >
               <Twitter />
             </Link>
-            <Link href="/" className="mr-[10px] hover:opacity-50">
+            <Link
+              target="_blank"
+              href="/"
+              className="mr-[10px] hover:opacity-50"
+            >
               <Youtube />
             </Link>
           </div>

@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import authStore from "@/lib/store/auth";
 import Head from "next/head";
 export default function Login() {
-  console.log("store", store);
   const [loginForm, onChangeLogin, onLogin, loginError, submissionLoading] =
     authStore(
       (state) => [
@@ -29,7 +28,6 @@ export default function Login() {
 
     try {
       const res = await onLogin();
-      console.log("resresres", res);
     } catch (err) {
       console.error("Error", err);
     }
