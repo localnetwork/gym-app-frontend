@@ -5,11 +5,12 @@ import DeletePromo from "../forms/DeletePromo";
 import useEntityState from "@/lib/store/entityState";
 import EditPromo from "../forms/EditPromo";
 export default function Modal() {
-  const { modalOpen, modalInfo, setModalInfo, deleteInfo } = modalState((state) => ({
+  const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } = modalState((state) => ({
     modalOpen: state.modalOpen,
     modalInfo: state.modalInfo,
     setModalInfo: state.setModalInfo,
     deleteInfo: state.deleteInfo,
+    setClearModal: state.setClearModal,
   }));
 
 
@@ -20,7 +21,7 @@ export default function Modal() {
   }else if(modalInfo.id === "delete-promo") {
     form = <DeletePromo />;
   }else if(modalInfo.id === "edit-promo") {
-    form = <EditPromo />; 
+    form = <EditPromo />;
   }
 
   useEffect(() => {
@@ -28,7 +29,8 @@ export default function Modal() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto"; 
-      modalState.setState({ modalOpen: false, deleteInfo: "",  modalInfo: "" });
+      // modalState.setState({ modalOpen: false, deleteInfo: "",  modalInfo: "" });
+      setClearModal(); 
     }
   }, [modalOpen]);
   

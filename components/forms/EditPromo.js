@@ -114,31 +114,64 @@ export default function EditPromo() {
       status, 
       duration,
     };  
- 
-    try {
-      const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
-      if (res.status === 200) {
-        toast.success('Promo updated successfully.', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true, 
-          pauseOnHover: true,
-          draggable: true, 
-          progress: undefined, 
-          theme: "light", 
-        }); 
-        setModalInfo({ modalInfo: "", })
-        modalState.setState({ modalOpen: false }) 
-        refetchPromos(); 
-        setIsSubmitting(false)
+    if(duration != defaultInfo?.duration) {
+      const confirm = window.confirm(`There's a change in the duration, this will affect the subscription of the subscribed members. Are you sure you want to continue?`);
+
+      if(confirm) {
+        setIsSubmitting(true)
+        try {
+          const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
+          if (res.status === 200) {
+            toast.success('Promo updated successfully.', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true, 
+              pauseOnHover: true,
+              draggable: true, 
+              progress: undefined, 
+              theme: "light", 
+            }); 
+            setModalInfo({ modalInfo: "", })
+            modalState.setState({ modalOpen: false }) 
+            refetchPromos(); 
+            setIsSubmitting(false)
+          }
+        } catch (error) {  
+          setIsSubmitting(false) 
+          if(error.status === 422) {
+            setErrors(error.data.errors);
+          }
+        }
       }
-    } catch (error) {  
-      setIsSubmitting(false) 
-      if(error.status === 422) {
-        setErrors(error.data.errors);
+      setIsSubmitting(false)
+    }else {
+      try {
+        const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
+        if (res.status === 200) {
+          toast.success('Promo updated successfully.', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false, 
+            closeOnClick: true, 
+            pauseOnHover: true,
+            draggable: true, 
+            progress: undefined, 
+            theme: "light", 
+          }); 
+          setModalInfo({ modalInfo: "", })
+          modalState.setState({ modalOpen: false }) 
+          refetchPromos(); 
+          setIsSubmitting(false)
+        }
+      } catch (error) {  
+        setIsSubmitting(false) 
+        if(error.status === 422) {
+          setErrors(error.data.errors);
+        }
       }
     }
+    
   }
  
   return (

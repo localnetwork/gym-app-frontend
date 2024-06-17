@@ -7,7 +7,11 @@ import { shallow } from "zustand/shallow";
 import { useRouter } from "next/router";
 import authStore from "@/lib/store/auth";
 import Head from "next/head";
+import errorsService from "@/lib/services/errorsService";
+import dbService from "@/lib/services/dbService";
 export default function Login() {
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginForm, onChangeLogin, onLogin, loginError, submissionLoading] =
     authStore(
       (state) => [
@@ -27,9 +31,21 @@ export default function Login() {
     e?.preventDefault();
 
     try {
+      setIsSubmitting(true);  
       const res = await onLogin();
-    } catch (err) {
+      if(res.status === 200) {
+        setIsSubmitting(false);
+      }
+    } catch (err) { 
       console.error("Error", err);
+      if (err?.data?.errors) {
+        setErrors(err?.data?.errors);
+      } 
+
+      if(err.status === 500) {
+        dbService.serverError(); 
+      }
+      setIsSubmitting(false);  
     }
   };
 
@@ -84,17 +100,10 @@ export default function Login() {
                   placeholder="Email"
                 />
 
-                {loginError && loginError?.email && (
-                  <>
-                    {loginError?.email.map((item, index) => (
-                      <span
-                        key={index}
-                        className="text-red-500 text-[13px] mt-[5px] block"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </>
+                {errorsService.findError(errors, "email") && (
+                  <p className="mt-2 text-red-500 text-xs">
+                    {errorsService.findError(errors, "email").email}
+                  </p>
                 )}
               </div>
               <div className="form-item mb-[15px]">
@@ -116,18 +125,11 @@ export default function Login() {
                   placeholder="Password"
                 />
 
-                {loginError && loginError?.password && (
-                  <>
-                    {loginError?.password.map((item, index) => (
-                      <span
-                        key={index}
-                        className="text-red-500 text-[13px] mt-[5px] block"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </>
-                )}
+                {errorsService.findError(errors, "password") && (
+                  <p className="mt-2 text-red-500 text-xs">
+                    {errorsService.findError(errors, "password").password}
+                  </p> 
+                )}  
               </div>
               <div className="form-action mt-[15px]">
                 <button

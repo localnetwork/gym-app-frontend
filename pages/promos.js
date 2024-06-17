@@ -58,7 +58,7 @@ export default function Promos() {
           </title>
         </Head>
         <div className="container">
-          <div className="bg-[#EFF0F0] text-[#121212] p-[50px]">
+          <div className="bg-[#EFF0F0] text-[#121212] p-[50px] rounded-[15px]">
             <div className="flex flex-wrap items-center justify-between gap-[15px] mb-[30px]">
               <h1
                 className={`text-[40px] font-black text-black ${montserrat.className}`}
