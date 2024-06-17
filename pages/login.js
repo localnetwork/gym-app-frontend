@@ -9,6 +9,7 @@ import authStore from "@/lib/store/auth";
 import Head from "next/head";
 import errorsService from "@/lib/services/errorsService";
 import dbService from "@/lib/services/dbService";
+import { toast } from "react-toastify";
 export default function Login() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,14 +42,10 @@ export default function Login() {
       if (err?.data?.errors) {
         setErrors(err?.data?.errors);
       } 
-
-      if(err.status === 500) {
-        dbService.serverError(); 
-      }
       setIsSubmitting(false);  
     }
   };
-
+ 
   if (profile) {
     // window.location.href = "/";
     router.push("/");
