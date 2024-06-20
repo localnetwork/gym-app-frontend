@@ -12,12 +12,25 @@ export default function AuthHeader({ profile }) {
     {
       name: "Promos",
       url: "/promos",
+      roleRestrictions: [1],
     },
+    { 
+      name: "Members",
+      url: "/users",
+      roleRestrictions: [1,2],
+    }, 
     {
-      name: "Contact Us",
-      url: "/contact",
+      name: "Contact Us", 
+      url: "/contact", 
     }, 
   ]
+
+  const filteredMenuLinks = menuLinks.filter((item) => {
+    return !item.roleRestrictions || item.roleRestrictions.includes(profile.role);
+  });
+
+
+
   const router = useRouter();
   const logoutHandler = async () => {
     setIsDropdownOpen(false);
@@ -47,7 +60,7 @@ export default function AuthHeader({ profile }) {
         </div>
         <div>
             {/* <Link href="/trainings">Trainings</Link> */}
-            {menuLinks.map((link, index) => (
+            {filteredMenuLinks.map((link, index) => (
               <Link
                 key={index}
                 href={link.url}
@@ -55,7 +68,7 @@ export default function AuthHeader({ profile }) {
               >
                 {link.name}
               </Link>
-            ))}
+            ))} 
           </div>  
         <div className="relative">
           <div className="flex items-center gap-x-[5px]">
@@ -76,7 +89,7 @@ export default function AuthHeader({ profile }) {
             ) : (
               <>
                 <div className="bg-[#1ed760] text-black p-[15px] rounded-full w-[50px] h-[50px] flex items-center justify-center">
-                  {profile?.name[0]}
+                  {profile?.name}
                 </div>
               </>
             )}

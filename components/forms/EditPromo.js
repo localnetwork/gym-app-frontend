@@ -99,8 +99,6 @@ export default function EditPromo() {
     }
   }; 
 
-  console.log('payload', payload); 
-
   const onSubmit = () => async (e) => {
     e.preventDefault();
     setIsSubmitting(true)

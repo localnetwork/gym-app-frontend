@@ -33,7 +33,7 @@ export default function AddPromo() {
         setDurations(res.data.data);
       }
     } catch (error) { 
-      console.log(error);
+      console.log('Error', error);
     }
   }; 
   useEffect(() => {

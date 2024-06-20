@@ -13,33 +13,28 @@ const TOKEN = process.env.NEXT_PUBLIC_TOKEN || "";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-
+import authService from "@/lib/services/authService";
+import { useRouter } from "next/router";
 export default function App({ Component, pageProps }) {
   const profile = persistentStore((state) => state.profile);
   const ready = globalState((state) => state.ready);
   const modalOpen = modalState((state) => state.modalOpen);
 
+  const router = useRouter();
+
   const cookies = parseCookies();
   const token = cookies[TOKEN];
 
+
+
   useEffect(() => {
-    if (!token && profile.name) {
-      window.location.reload();
-      persistentStore.setState({ profile: "" });
-    }
-    if (!ready) return;
+    if(token) {
 
-    const fetchProfile = async () => {
-      try {
-        const res = await AUTHAPI.getProfileInfo();
-        persistentStore.setState({ profile: res.data.data });
-      } catch (err) {
-        persistentStore.setState({ profile: "" });
-      }
-    };
-
-    fetchProfile();
-  }, [profile, ready, token]);
+      router.events.on('routeChangeStart', (url, { shallow }) => {
+        authService.refetchProfile();  
+      });
+    }  
+  }, [token]);  
 
   return (
     <Layout profile={profile}>

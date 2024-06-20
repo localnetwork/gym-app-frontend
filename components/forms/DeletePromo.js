@@ -18,8 +18,6 @@ export default function DeletePromo() {
         isPromosLoading: state.isPromosLoading,
       }));
 
-    console.log('deleteInfo', deleteInfo)
-
     const onYes = async() => {
         try {
             const res = await BaseApi.delete(process.env.NEXT_PUBLIC_API_URL + `/promos/${deleteInfo.id}`);
