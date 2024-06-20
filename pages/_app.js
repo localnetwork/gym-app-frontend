@@ -29,7 +29,7 @@ export default function App({ Component, pageProps }) {
 
   useEffect(() => {
     if(token) {
-
+      authService.refetchProfile();   
       router.events.on('routeChangeStart', (url, { shallow }) => {
         authService.refetchProfile();  
       });

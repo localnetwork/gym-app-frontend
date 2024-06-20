@@ -8,6 +8,7 @@ import Image from "next/image";
 import authService from "@/lib/services/authService";
 export default function AuthHeader({ profile }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter(); 
   const menuLinks = [
     {
       name: "Promos",
@@ -31,7 +32,7 @@ export default function AuthHeader({ profile }) {
 
 
 
-  const router = useRouter();
+  
   const logoutHandler = async () => {
     setIsDropdownOpen(false);
     try {
@@ -40,7 +41,7 @@ export default function AuthHeader({ profile }) {
       console.error("Error", error);
     }
   };
-
+  
   const role = authService.getRole(profile?.role); 
  
   return (
@@ -64,7 +65,7 @@ export default function AuthHeader({ profile }) {
               <Link
                 key={index}
                 href={link.url}
-                className="text-white text-[20px] font-bold cursor-pointer hover:text-[#009CFF] px-[20px]"
+                className={`${router.asPath == link.url ? '!text-[#009CFF]' : ''} text-white text-[20px] font-bold cursor-pointer hover:text-[#009CFF] px-[20px]`}
               >
                 {link.name}
               </Link>

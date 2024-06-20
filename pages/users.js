@@ -136,7 +136,7 @@ export default function Members() {
                           modalState.setState({ modalOpen: true, deleteInfo: { id: member.user_id }, modalInfo: { id: "delete-member", title: `Are you sure you want to delete ${member.name} - ${authService.getRole(member.role)} ?` } });
                         }
                       }>Delete User</button>
-                    </div>
+                    </div> 
                   </div>
                 ))}
               </div> 

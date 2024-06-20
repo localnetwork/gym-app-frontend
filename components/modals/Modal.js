@@ -6,6 +6,7 @@ import DeletePromo from "../forms/DeletePromo";
 import useEntityState from "@/lib/store/entityState";
 import EditPromo from "../forms/EditPromo";
 import EditMember from "../forms/EditMember";
+import DeleteMember from "../forms/DeleteUser";
 export default function Modal() {
   const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } = modalState((state) => ({
     modalOpen: state.modalOpen,
@@ -28,7 +29,9 @@ export default function Modal() {
     form = <AddMember />;
   }else if(modalInfo.id === "edit-member") {
     form = <EditMember />;
-  } 
+  }else if(modalInfo.id === "delete-member") {
+    form = <DeleteMember />;
+  }  
 
   useEffect(() => {
     if (modalOpen) {
