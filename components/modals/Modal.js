@@ -7,6 +7,8 @@ import useEntityState from "@/lib/store/entityState";
 import EditPromo from "../forms/EditPromo";
 import EditMember from "../forms/EditMember";
 import DeleteMember from "../forms/DeleteUser";
+import AddSubscription from "../forms/AddSubscription";
+import ViewUserSubscriptions from "../forms/ViewUserSubscriptions";
 export default function Modal() {
   const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } = modalState((state) => ({
     modalOpen: state.modalOpen,
@@ -19,20 +21,35 @@ export default function Modal() {
 
   let form = null;
 
-  if (modalInfo.id === "add-promo") {
-    form = <AddPromo />;
-  }else if(modalInfo.id === "delete-promo") {
-    form = <DeletePromo />;
-  }else if(modalInfo.id === "edit-promo") {
-    form = <EditPromo />;
-  }else if(modalInfo.id === "add-member") {
-    form = <AddMember />;
-  }else if(modalInfo.id === "edit-member") {
-    form = <EditMember />;
-  }else if(modalInfo.id === "delete-member") {
-    form = <DeleteMember />;
-  }  
-
+  switch (modalInfo.id) {
+    case "add-promo":
+      form = <AddPromo />;
+      break;
+    case "delete-promo":
+      form = <DeletePromo />;
+      break;
+    case "edit-promo":
+      form = <EditPromo />;
+      break;
+    case "add-member":
+      form = <AddMember />;
+      break;
+    case "edit-member":
+      form = <EditMember />;
+      break;
+    case "delete-member":
+      form = <DeleteMember />;
+      break;
+    case "add-subscription":
+      form = <AddSubscription />;
+      break;
+    case "view-subscription":
+      form = <ViewUserSubscriptions />;
+      break;
+    default:
+      form = null;
+  } 
+ 
   useEffect(() => {
     if (modalOpen) {
       document.body.style.overflow = "hidden";

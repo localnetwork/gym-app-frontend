@@ -122,7 +122,7 @@ export default function Members() {
                   </div>  
  
                     <div className="mt-[30px] flex flex-wrap gap-[15px]"> 
-                    <button 
+                      <button 
                       className="inline-flex max-w-[200px] px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[18px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full"
                       onClick={
                         () => { 
@@ -136,6 +136,26 @@ export default function Members() {
                           modalState.setState({ modalOpen: true, deleteInfo: { id: member.user_id }, modalInfo: { id: "delete-member", title: `Are you sure you want to delete ${member.name} - ${authService.getRole(member.role)} ?` } });
                         }
                       }>Delete User</button>
+
+                      {member.role === 3 && (
+                        <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[18px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
+                          onClick={() => {
+                            modalState.setState({ modalOpen: true, modalInfo: { id: "add-subscription", title: `Add subscription for ${member.name}`, memberId: member.user_id } });
+                          }}
+                        >
+                          Add Subscription
+                        </button>
+                      )}
+
+                      {member.role === 3 && (
+                        <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[18px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
+                          onClick={() => {
+                            modalState.setState({ modalOpen: true, modalInfo: { id: "view-subscription", title: `Add subscription for ${member.name}`, memberId: member.user_id } });
+                          }}
+                        > 
+                          View Subscriptions
+                        </button> 
+                      )}
                     </div> 
                   </div>
                 ))}

@@ -17,16 +17,16 @@ export default function DeleteMember() {
         refetchMembers: state.refetchMembers,
         isMembersLoading: state.isMembersLoading,
       }));
-
+ 
     const onYes = async() => {
-        refetchMembers();  
+          
         authService.refetchProfile(); 
         try {
             const res = await BaseApi.delete(process.env.NEXT_PUBLIC_API_URL + `/users/${deleteInfo.id}`);
             if(res.status === 200) {
                 setClearModal();
                 toast.success("User deleted successfully");
-                
+                refetchMembers();
             }
         }catch(error) {
             console.log('Error', error)  
@@ -35,11 +35,11 @@ export default function DeleteMember() {
             }
             if(error && error.status === 500) {
                 serverError();
-            } 
+            }
+            refetchMembers(); 
         }
     }
     
-
     const onNo = () => {
         modalState.setState({ modalOpen: false }) 
     }
