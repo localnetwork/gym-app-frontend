@@ -110,36 +110,6 @@ export default function AddSubscription() {
   return (
     <div>
       <form id="add-subscription" onSubmit={onSubmit()}>
-        <div className="form-item mb-[15px]">
-          <input
-            id="title"
-            className="w-full shadow-[0_0_0_1px(#727272,878787)]"
-            type="text"
-            name="title"
-            placeholder="Promo Title"
-          />
-          {errorsService.findError(errors, "title") && (
-            <p className="mt-2 text-red-500 text-xs">
-              {errorsService.findError(errors, "title").title}
-            </p>
-          )} 
-        </div>  
-        
-        <div className="form-item mb-[15px]">
-          <input
-            id="price"
-            className="w-full shadow-[0_0_0_1px(#727272,878787)]"
-            type="number"
-            name="price"
-            placeholder="Price" 
-          /> 
-
-          {errorsService.findError(errors, "price") && (
-            <p className="mt-2 text-red-500 text-xs">
-              {errorsService.findError(errors, "price").price}
-            </p> 
-          )}
-        </div>
         
         <label>Payment Method</label>
         {paymentMethodsOptions && (

@@ -15,6 +15,8 @@ import avatarService from "@/lib/services/avatar";
 import modalState from "@/lib/store/modalState";
 import persistentStore from "@/lib/store/persistentStore";
 import authService from "@/lib/services/authService";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Members() {
 
@@ -118,6 +120,13 @@ export default function Members() {
                           {authService.getRole(member.role)}
                         </div>
 
+                        {console.log('member', member)}
+
+                        {member?.qr_code && (
+                          <Link href={process.env.NEXT_PUBLIC_API_URL + member.qr_code} target="_blank">
+                            <Image src={process.env.NEXT_PUBLIC_API_URL + member.qr_code} className="w-[150px]" width={500} height={500} alt="QR Code" />
+                          </Link>
+                        )}
                       </div>
                   </div>  
  

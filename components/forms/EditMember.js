@@ -62,14 +62,15 @@ export default function EditMember() {
     e.preventDefault();
     setIsSubmitting(true)
 
-    let { name, email, avatar, color, role } = payload;
+    let { name, email, avatar, color, role, status } = payload;
     role = parseInt(role, 10);  
     const data = {
-      name, 
+      name,  
       email, 
       avatar,  
       color,
       role,
+      status
     };  
 
     try {
@@ -90,7 +91,7 @@ export default function EditMember() {
         modalState.setState({ modalOpen: false }) 
         refetchMembers(); 
         setIsSubmitting(false)
-      } 
+      }  
     } catch (error) {  
       setIsSubmitting(false) 
       console.log('Error', error)
@@ -107,6 +108,7 @@ export default function EditMember() {
         try {
           const res = await BaseApi.get(process.env.NEXT_PUBLIC_API_URL + "/users/" + editInfo.id); 
           if(res.status === 200) {
+          console.log('status', res.data.status)
             
             setPayload({
               name: res.data.name,
@@ -114,6 +116,7 @@ export default function EditMember() {
               avatar: res.data.avatar,
               color: res.data.avatar_color, 
               role: res.data.role,
+              status: res.data.status,
             }) 
           }
         } catch (error) { 
@@ -124,8 +127,26 @@ export default function EditMember() {
   }, []);
 
   const onChangeUpdate = (data) => {
+
+    console.log('payload', payload)
     setPayload({ ...payload, ...data });
   }
+
+  const onChange = (e) => {
+    if (e?.target) {
+      const { name, type, checked, value } = e.target;
+      setPayload((prevPayload) => ({
+        ...prevPayload,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    } else {
+      // Handle select change
+      setPayload((prevPayload) => ({
+        ...prevPayload,
+        duration: e, // e is the selected option object
+      }));
+    }
+  };  
 
   return (
     <div>
@@ -307,9 +328,6 @@ export default function EditMember() {
                     onChange={(e) =>
                       onChangeUpdate({ avatar: e?.target?.value })
                     }
-                    onKeyDown={(e) =>
-                      e?.key === "Enter" ? onRegisterTrigger() : null
-                    }
                     checked={payload.avatar === item.id ? true : false}
                     className="hidden"
                   />
@@ -322,7 +340,24 @@ export default function EditMember() {
                 </div>
               ))}
             </div> 
+            <div className="form-item mb-[15px]">
+              <input 
+              type="checkbox" 
+              name="status" 
+              id="status" 
+              checked={payload?.status ? true : false}
+              onChange={onChange} 
+              />
+              <label htmlFor="status" className="select-none cursor-pointer">
+                <span className="ml-[10px]">Active</span>
+              </label> 
 
+              {errorsService.findError(errors, "status") && (
+                <p className="mt-2 text-red-500 text-xs">
+                  {errorsService.findError(errors, "status").status}
+                </p>
+              )}
+            </div>
         <button className="flex px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[20px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full">
         {isSubmitting && (
                 <svg

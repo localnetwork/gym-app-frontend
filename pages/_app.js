@@ -31,10 +31,16 @@ export default function App({ Component, pageProps }) {
     if(token) {
       authService.refetchProfile();   
       router.events.on('routeChangeStart', (url, { shallow }) => {
-        authService.refetchProfile();  
-      });
-    }  
-  }, [token]);  
+        console.log('routeee')
+        if(profile.name) {  
+          console.log('has profile') 
+          // authService.refetchProfile();    
+        }else {
+          console.log('no profile')
+        }
+      }); 
+    }   
+  }, [token, authService]);  
 
   return (
     <Layout profile={profile}>

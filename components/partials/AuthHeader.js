@@ -36,7 +36,8 @@ export default function AuthHeader({ profile }) {
   const logoutHandler = async () => {
     setIsDropdownOpen(false);
     try {
-      const res = await AUTHAPI.logout();
+      // const res = await AUTHAPI.logout();
+      authService.logoutSession();
     } catch (error) {
       console.error("Error", error);
     }

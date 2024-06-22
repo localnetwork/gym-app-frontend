@@ -29,8 +29,7 @@ export default function Login() {
   const profile = store((state) => state.profile);
 
   const onLoginTrigger = async (e) => {
-    e?.preventDefault();
-
+    e?.preventDefault(); 
     try {
       setIsSubmitting(true);  
       const res = await onLogin();
@@ -41,7 +40,7 @@ export default function Login() {
       console.error("Error", err);
       if (err?.data?.errors) {
         setErrors(err?.data?.errors);
-      } 
+      }  
       setIsSubmitting(false);  
     }
   };

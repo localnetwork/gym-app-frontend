@@ -99,6 +99,33 @@ export default function EditPromo() {
     }
   }; 
 
+  const execPost = async() => {
+    try {
+      const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
+      if (res.status === 200) {
+        toast.success('Promo updated successfully.', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true, 
+          pauseOnHover: true,
+          draggable: true, 
+          progress: undefined, 
+          theme: "light", 
+        }); 
+        setModalInfo({ modalInfo: "", })
+        modalState.setState({ modalOpen: false }) 
+        refetchPromos(); 
+        setIsSubmitting(false)
+      }
+    } catch (error) {  
+      setIsSubmitting(false) 
+      if(error.status === 422) {
+        setErrors(error.data.errors);
+      }
+    } 
+  }
+
   const onSubmit = () => async (e) => {
     e.preventDefault();
     setIsSubmitting(true)
@@ -117,30 +144,7 @@ export default function EditPromo() {
 
       if(confirm) {
         setIsSubmitting(true)
-        try {
-          const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
-          if (res.status === 200) {
-            toast.success('Promo updated successfully.', {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true, 
-              pauseOnHover: true,
-              draggable: true, 
-              progress: undefined, 
-              theme: "light", 
-            }); 
-            setModalInfo({ modalInfo: "", })
-            modalState.setState({ modalOpen: false }) 
-            refetchPromos(); 
-            setIsSubmitting(false)
-          }
-        } catch (error) {  
-          setIsSubmitting(false) 
-          if(error.status === 422) {
-            setErrors(error.data.errors);
-          }
-        }
+        execPost(); 
       }
       setIsSubmitting(false)
     }else {

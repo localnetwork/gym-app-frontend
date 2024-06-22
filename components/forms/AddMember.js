@@ -76,15 +76,13 @@ export default function AddMember() {
       password,
       confirm_password,
     };
-
- 
     try {
       const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/users", data);
       if (res.status === 200) {
-        toast.success('User added successfully.', {
+        toast.success(`${res.data.message}`, {
           position: "top-right", 
           autoClose: 5000,
-          hideProgressBar: false,
+          hideProgressBar: false, 
           closeOnClick: true, 
           pauseOnHover: true,
           draggable: true, 
