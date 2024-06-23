@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
@@ -11,9 +11,9 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "img.youtube.com",
-        port: "",
-        pathname: `/vi/**`,
+        hostname: "one-kaizen-backend.vercel.app",
+        port: process.env.NEXT_PUBLIC_API_PORT,
+        pathname: `/**`,
       },
     ],
   },
