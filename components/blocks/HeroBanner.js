@@ -11,7 +11,10 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+import persistentStore from "@/lib/store/persistentStore";  
 export default function HeroBanner() {
+  const profile = persistentStore((state) => state.profile); 
+
   return (
     <div
       className={`pl-[10%] ${montserrat.className} bg-[url(/images/icon1.svg)] bg-[length:50px]`}
@@ -33,8 +36,7 @@ export default function HeroBanner() {
               className="bg-[#009CFF] text-white text-[20px] font-bold px-[30px]
               py-[10px] rounded-[6px] mt-[20px] inline-block"
             >
-              {" "}
-              Become a Member
+              {profile ? "Extend Membership" : "Become a member"}
             </Link>
           </div>
         </div>

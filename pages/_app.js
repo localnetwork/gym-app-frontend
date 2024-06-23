@@ -30,15 +30,6 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     if(token) {
       authService.refetchProfile();   
-      router.events.on('routeChangeStart', (url, { shallow }) => {
-        console.log('routeee')
-        if(profile.name) {  
-          console.log('has profile') 
-          // authService.refetchProfile();    
-        }else {
-          console.log('no profile')
-        }
-      }); 
     }   
   }, [token, authService]);  
 

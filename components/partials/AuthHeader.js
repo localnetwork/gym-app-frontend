@@ -47,7 +47,7 @@ export default function AuthHeader({ profile }) {
     setIsDropdownOpen(false);
     try {
       // const res = await AUTHAPI.logout();
-      authService.logoutSession();
+      authService.logout();
     } catch (error) {
       console.error("Error", error);
     }
