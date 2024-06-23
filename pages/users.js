@@ -94,52 +94,65 @@ export default function Members() {
                   </div>   
                 )} 
                 {members?.map((member, index) => (
-                  <div key={index} className={`mb-4 bg-[#fff] rounded-[10px] p-[30px] ${profile?.user_id == member.user_id ? 'border-green-500 border-[1px]' : ''}`}>
+                  <div key={index} className={`mb-4 bg-[#fff] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.2)] hover:border-[#ccc] hover:border-[1px] rounded-[10px] p-[30px] ${profile?.user_id == member.user_id ? '!border-green-500 border-[1px]' : ''}`}>
                     {profile?.user_id == member.user_id && (
                       <span className="bg-green-500 text-[12px] font-bold px-[10px] py-[5px] rounded-[10px] inline-block mb-[15px]">Your account</span>
                     )}
   
-                  <div className="flex flex-wrap gap-[15px]">
-                        <div
-                        className="cursor-pointer text-[#333] inline-block rounded-full w-[50px] h-[50px] flex items-center justify-center p-[5px]"
-                        style={{
-                          backgroundColor: avatarService.findColor(
-                            member?.avatar_color
-                          ),
-                        }} 
-                      > 
-                        {avatarService.findAvatar(member?.avatar)}
-                      </div>
-                      <div>
-                        <h2 className="text-xl font-bold mb-2">{member?.name}</h2> 
+                      <div className="flex justify-between w-full items-start">
+                        <div className="flex gap-x-[15px]">
+                          <div
+                          className="cursor-pointer text-[#333] inline-block rounded-full w-[50px] h-[50px] flex items-center justify-center p-[5px]"
+                          style={{
+                            backgroundColor: avatarService.findColor(
+                              member?.avatar_color
+                            ),
+                          }} 
+                        > 
+                          {avatarService.findAvatar(member?.avatar)}
+                        </div>
                         <div>
-                          {member.email}
-                        </div>
- 
-                        <div className="bg-[#009CFF] inline-block px-2 py-[3px] rounded-[5px] text-[12px] text-white inline-block">
-                          {authService.getRole(member.role)}
+                          <h2 className="text-xl font-bold mb-2">{member?.name}</h2> 
+                          <div>
+                            {member.email}
+                          </div>
+  
+                          <div className="bg-[#009CFF] inline-block px-2 py-[3px] rounded-[5px] text-[12px] text-white inline-block">
+                            {authService.getRole(member.role)}
+                          </div>
+                          </div>
                         </div>
 
-                        {console.log('member', member)}
+                        {member?.qr_code && member.role === 3 && (
+                          <div className="flex flex-col items-center">
+                            <Link title="View QR Code" href={process.env.NEXT_PUBLIC_API_URL + member.qr_code} target="_blank" className="group relative inline-block">
+                              <span className="group-hover:!flex hidden transition absolute top-0 left-0 w-full h-full z-1 justify-center items-center text-white bg-[#000] bg-opacity-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>
+                              </span>
+                              <Image src={process.env.NEXT_PUBLIC_API_URL + member.qr_code} className="w-[150px]" width={500} height={500} alt="QR Code" />
+                            </Link>
 
-                        {member?.qr_code && (
-                          <Link href={process.env.NEXT_PUBLIC_API_URL + member.qr_code} target="_blank">
-                            <Image src={process.env.NEXT_PUBLIC_API_URL + member.qr_code} className="w-[150px]" width={500} height={500} alt="QR Code" />
-                          </Link>
+                            <div className="mt-[15px]">
+                              <Link href={`/user/qr-info/${member?.uuid}`} target="_blank" className="hover:underline">
+                                View Public Profile
+                              </Link>
+                            </div> 
+                          </div>
                         )}
                       </div>
-                  </div>  
  
-                    <div className="mt-[30px] flex flex-wrap gap-[15px]"> 
+                    <div className="mt-[60px] flex flex-wrap gap-[15px]"> 
                       <button 
-                      className="inline-flex max-w-[200px] px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[18px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full"
+                      className="inline-flex max-w-[200px] px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full"
                       onClick={
                         () => { 
                           modalState.setState({ modalOpen: true, editInfo: { id: member.user_id }, modalInfo: { id: "edit-member", title: `Edit ${member.name} - ${authService.getRole(member.role)}` } });
                         }
                       }>Edit User</button>
                       <button
-                      className="inline-flex max-w-[200px] px-[30px] items-center justify-center hover:bg-red-700 text-center cursor-pointer text-[18px] font-bold rounded-[6px] bg-red-500 py-[10px] text-black text-uppercase w-full"
+                      className="inline-flex max-w-[200px] px-[30px] items-center justify-center hover:bg-red-700 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-red-500 py-[10px] text-black text-uppercase w-full"
                       onClick={
                         () => {
                           modalState.setState({ modalOpen: true, deleteInfo: { id: member.user_id }, modalInfo: { id: "delete-member", title: `Are you sure you want to delete ${member.name} - ${authService.getRole(member.role)} ?` } });
@@ -147,7 +160,7 @@ export default function Members() {
                       }>Delete User</button>
 
                       {member.role === 3 && (
-                        <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[18px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
+                        <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
                           onClick={() => {
                             modalState.setState({ modalOpen: true, modalInfo: { id: "add-subscription", title: `Add subscription for ${member.name}`, memberId: member.user_id } });
                           }}
@@ -157,7 +170,7 @@ export default function Members() {
                       )}
 
                       {member.role === 3 && (
-                        <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[18px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
+                        <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
                           onClick={() => {
                             modalState.setState({ modalOpen: true, modalInfo: { id: "view-subscription", title: `Add subscription for ${member.name}`, memberId: member.user_id } });
                           }}

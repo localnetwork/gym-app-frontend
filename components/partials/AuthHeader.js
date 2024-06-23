@@ -11,8 +11,8 @@ export default function AuthHeader({ profile }) {
   const router = useRouter(); 
   const menuLinks = [
     {
-      name: "Promos",
-      url: "/promos",
+      name: "Plans",
+      url: "/plans",
       roleRestrictions: [1],
     },
     { 
@@ -20,6 +20,16 @@ export default function AuthHeader({ profile }) {
       url: "/users",
       roleRestrictions: [1,2],
     }, 
+    { 
+      name: "Non-members",
+      url: "/non-members",
+      roleRestrictions: [1,2],
+    }, 
+    {
+      name: "Durations",
+      url: "/durations",
+      roleRestrictions: [1],
+    },
     {
       name: "Contact Us", 
       url: "/contact", 

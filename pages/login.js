@@ -41,6 +41,11 @@ export default function Login() {
       if (err?.data?.errors) {
         setErrors(err?.data?.errors);
       }  
+      console.log(err)
+      console.log(err.status)
+      if(err.status === 422) {
+        toast.error(err.data.message)
+      }
       setIsSubmitting(false);  
     }
   };

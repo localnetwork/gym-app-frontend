@@ -25,7 +25,7 @@ export default function DeletePromo() {
             console.log('res', res) 
             if(res.status === 200) {
                 setClearModal();
-                toast.success("Promo deleted successfully");
+                toast.success("Plan deleted successfully");
                 refetchPromos();  
             }
         }catch(error) {

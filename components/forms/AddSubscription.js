@@ -8,6 +8,7 @@ import modalState from "@/lib/store/modalState";
 import { toast } from "react-toastify";
 import errorsService from "@/lib/services/errorsService";
 import entityState from "@/lib/store/entityState";
+import helper from "@/lib/scrap/helper";
 export default function AddSubscription() {
   const [durations, setDurations] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);  
@@ -15,6 +16,8 @@ export default function AddSubscription() {
   const [defaultInfo, setDefaultInfo] = useState(); 
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [activePromos, setActivePromos] = useState([]);
+  const [data, setData] = useState({
+  }); 
 
   const { modalOpen, modalInfo, setModalInfo, editInfo, clearModal } = modalState((state) => ({
     modalOpen: state.modalOpen,
@@ -30,7 +33,7 @@ export default function AddSubscription() {
 
   const getPromos = async() => {
     try {
-      const res = await BaseApi.get(process.env.NEXT_PUBLIC_API_URL + "/promos"); 
+      const res = await BaseApi.get(process.env.NEXT_PUBLIC_API_URL + "/member-promos"); 
       if(res.status === 200) {
         setActivePromos(res.data.data);
       }
@@ -53,90 +56,127 @@ export default function AddSubscription() {
   useEffect(() => {
     getPromos();
     getPaymentMethods(); 
+    setData((prevPayload) => ({
+      ...prevPayload,
+      availed_by: modalInfo.memberId,
+    }))  
   }, []);
-
-  const promosOptions = activePromos.map((promo) => ({
-    value: promo.id,
-    label: promo.title,
-  }));   
 
   const paymentMethodsOptions = paymentMethods.map((paymentMethod) => ({
     value: paymentMethod.id,
     label: paymentMethod.title,
   }));
 
-
-  console.log('modalInfo', modalInfo?.memberId)
-  const onSubmit = () => async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true)
-    const status = e?.target?.status?.checked; 
-    const promo = parseInt(e?.target?.promo?.value);
-    const payment_method = parseInt(e?.target?.payment_method?.value);
-    const availed_by = modalInfo?.memberId; 
-    const data = {
-      status, 
-      promo,
-      availed_by, 
-      payment_method
-    }; 
- 
+    setIsSubmitting(true);
+  
     try {
       const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/subscriptions", data);
       if (res.status === 200) {
-        toast.success('Promo added successfully.', {
-          position: "top-right", 
-          autoClose: 5000,
+        toast.success('Subscription added successfully.', {
+          position: "top-right",
+          autoClose: 3000,
           hideProgressBar: false,
-          closeOnClick: true, 
+          closeOnClick: true,
           pauseOnHover: true,
-          draggable: true, 
-          progress: undefined, 
-          theme: "light", 
-        }); 
-        setModalInfo({ modalInfo: "", })
-        modalState.setState({ modalOpen: false }) 
-        refetchPromos(); 
-        setIsSubmitting(false)
-      } 
-    } catch (error) {  
-      setIsSubmitting(false) 
-      if(error.status === 422) {
-        setErrors(error.data.errors);
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setModalInfo(""); // Adjust setting modalInfo
+        modalState.setState({ modalOpen: false });
+        refetchMembers(); // Adjust the refetch method
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      setIsSubmitting(false);
+
+      if (error && error.status === 422) {
+        console.log('error.data.errors', error.data.errors)
+        setErrors(error.data.errors); // Access errors from response.data
+      } else {
+        console.error('Error:', error);
       }
     }
-  }
+  }; 
+
+  const onChange = (e) => {
+    setData((prevPayload) => ({
+      ...prevPayload,
+      availed_by: modalInfo.memberId,
+    }))  
+    if (e?.target) {
+      const { name, type, checked, value } = e.target;
+      setData((prevPayload) => ({
+        ...prevPayload,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    } else if (e?.value) { // Handle select change
+      const { name, value } = e;
+      
+      if(!name) { 
+        setData((prevPayload) => ({
+          ...prevPayload,
+          payment_method: parseInt(value),
+        }));
+      }else {
+        setData((prevPayload) => ({
+          ...prevPayload,
+          [name]: value,
+        })); 
+      }
+    }
+  }; 
+
  
   return (
     <div>
-      <form id="add-subscription" onSubmit={onSubmit()}>
+      <form id="add-subscription" onSubmit={onSubmit}>
         
         <label>Payment Method</label>
         {paymentMethodsOptions && (
-          <div className="form-item mb-[15px]">
-            <Select id="payment_method" name="payment_method" options={paymentMethodsOptions} placeholder={"Select a payment method"} /> 
+          <div className="form-item mb-[30px]">
+            <Select id="payment_method" name="payment_method" onChange={onChange} options={paymentMethodsOptions} placeholder={"Select a payment method"} /> 
             {errorsService.findError(errors, "payment_method") && (
-            <p className="mt-2 text-red-500 text-xs">
-              {errorsService.findError(errors, "payment_method").payment_method}
-            </p> 
-          )} 
-          </div>  
-        )}  
-
-        <label>Promo</label>
-        {promosOptions && (
-          <div className="form-item mb-[15px]">
-            <Select id="promo" name="promo" options={promosOptions} placeholder={"Select a promo"} /> 
-            {errorsService.findError(errors, "promo") && (
-            <p className="mt-2 text-red-500 text-xs">
-              {errorsService.findError(errors, "promo").promo}
-            </p> 
-          )} 
+              <p className="mt-2 text-red-500 text-xs">
+                {errorsService.findError(errors, "payment_method").payment_method}
+              </p> 
+            )} 
           </div>  
         )}  
 
         <div className="form-item mb-[15px]">
-          <input type="checkbox" name="status" id="status" />
+          <label className="mb-[5px] block">Choose a plan:</label>
+          <div className="flex flex-wrap mx-[-7px]">
+          {activePromos.map((item, index) => (
+            <div key={index} className="w-full px-[7px] mb-[15px] max-w-[50%] relative">
+              <label className={`cursor-pointer block font-bold border-[3px] border-green-500 bg-green-100 text-[#00491b] px-[20px] py-[30px] rounded-[15px] ${parseInt(data?.promo) === item?.id ? "!bg-green-500 !text-black" : ""}`} key={index} htmlFor={`plan-${item.id}`}>
+              <input type="radio" name="promo" id={`plan-${item.id}`} value={parseInt(item.id)} className="hidden" onChange={onChange} />
+              {parseInt(data?.promo) === item?.id && (
+                <span className="absolute top-[5px] left-[15px] text-[12px] bg-green-200 px-[5px] rounded-[5px]">
+                  Selected
+                </span>
+              )} 
+              <span className="text-[20px]">{item.title}</span>
+
+              {/* item.price */}
+              <div>
+              {helper.priceFormatter(item.price)}
+              </div>
+            </label>
+            </div>
+          ))}
+          </div>
+          {errorsService.findError(errors, "promo") && (
+              <p className="mt-2 text-red-500 text-xs">
+                {errorsService.findError(errors, "promo").promo}
+              </p> 
+            )}  
+        </div>
+
+        <div className="form-item mb-[15px]">
+          <input type="checkbox" name="status" id="status" onChange={onChange} />
           <label htmlFor="status" className="select-none cursor-pointer">
             <span className="ml-[10px]">Active</span>
           </label> 

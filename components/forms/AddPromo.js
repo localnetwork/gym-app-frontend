@@ -52,19 +52,21 @@ export default function AddPromo() {
     const price = e?.target?.price?.value;
     const status = e?.target?.status?.checked; 
     const duration = parseInt(e?.target?.duration?.value);
+    const member_type = parseInt(e?.target?.member_type?.value);
     const data = {
       title, 
       price,
       status, 
       duration,
+      member_type
     }; 
  
     try {
       const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/promos", data);
       if (res.status === 200) {
-        toast.success('Promo added successfully.', {
+        toast.success('Plan added successfully.', {
           position: "top-right", 
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true, 
           pauseOnHover: true,
@@ -94,7 +96,7 @@ export default function AddPromo() {
             className="w-full shadow-[0_0_0_1px(#727272,878787)]"
             type="text"
             name="title"
-            placeholder="Promo Title"
+            placeholder="Plan Title"
           />
           {errorsService.findError(errors, "title") && (
             <p className="mt-2 text-red-500 text-xs">
@@ -122,12 +124,51 @@ export default function AddPromo() {
           <div className="form-item mb-[15px]">
             <Select id="duration" name="duration" options={options} /> 
             {errorsService.findError(errors, "duration") && (
-            <p className="mt-2 text-red-500 text-xs">
-              {errorsService.findError(errors, "duration").duration}
-            </p> 
-          )}
+              <p className="mt-2 text-red-500 text-xs">
+                {errorsService.findError(errors, "duration").duration}
+              </p> 
+            )}
           </div> 
         )}  
+
+        <div className="form-item mb-[15px]">
+          <label>Member Type</label>
+          <div className="flex gap-[5px]">
+            <div className="flex gap-[5px]">
+              <input
+                type="radio"
+                id={`member-type-0`}
+                name="member_type"
+                value={0}
+              />
+              <label
+                className="cursor-pointer"
+                htmlFor={`member-type-0`}
+              >
+                Non-member
+              </label>
+            </div>
+            <div className="flex gap-[5px]">
+              <input
+                type="radio"
+                id={`member-type-1`}
+                name="member_type"
+                value={1}
+              />
+              <label
+                className="cursor-pointer"
+                htmlFor={`member-type-1`}
+              >
+                Member
+              </label> 
+            </div>
+          </div>
+          {errorsService.findError(errors, "member_type") && (
+              <p className="mt-2 text-red-500 text-xs">
+                {errorsService.findError(errors, "member_type").member_type}
+              </p> 
+            )} 
+        </div>
   
         <div className="form-item mb-[15px]">
           <input type="checkbox" name="status" id="status" />

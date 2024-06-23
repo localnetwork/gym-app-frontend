@@ -71,6 +71,7 @@ export default function EditPromo() {
     price: defaultInfo?.price,
     status: defaultInfo?.status,
     duration: getDefaultDuration(defaultInfo), 
+    member_type: defaultInfo?.member_type
   });
 
   // This useEffect ensures that when defaultInfo changes, payload is updated
@@ -80,17 +81,26 @@ export default function EditPromo() {
       price: defaultInfo?.price,
       status: defaultInfo?.status,
       duration: getDefaultDuration(defaultInfo),
+      member_type: defaultInfo?.member_type
     });
   }, [defaultInfo]); 
 
   const onChange = (e) => {
     if (e?.target) {
       const { name, type, checked, value } = e.target;
+      console.log('name', name)
       setPayload((prevPayload) => ({
         ...prevPayload,
         [name]: type === 'checkbox' ? checked : value,
-      }));
-    } else {
+      })); 
+
+      if(name === 'member_type') {
+        setPayload((prevPayload) => ({
+          ...prevPayload,
+          [name]: parseInt(value),
+        }));
+      } 
+    } else { 
       // Handle select change
       setPayload((prevPayload) => ({
         ...prevPayload,
@@ -99,33 +109,6 @@ export default function EditPromo() {
     }
   }; 
 
-  const execPost = async() => {
-    try {
-      const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
-      if (res.status === 200) {
-        toast.success('Promo updated successfully.', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true, 
-          pauseOnHover: true,
-          draggable: true, 
-          progress: undefined, 
-          theme: "light", 
-        }); 
-        setModalInfo({ modalInfo: "", })
-        modalState.setState({ modalOpen: false }) 
-        refetchPromos(); 
-        setIsSubmitting(false)
-      }
-    } catch (error) {  
-      setIsSubmitting(false) 
-      if(error.status === 422) {
-        setErrors(error.data.errors);
-      }
-    } 
-  }
-
   const onSubmit = () => async (e) => {
     e.preventDefault();
     setIsSubmitting(true)
@@ -133,27 +116,52 @@ export default function EditPromo() {
     const price = e?.target?.price?.value;
     const status = e?.target?.status?.checked;
     const duration = parseInt(e?.target?.duration?.value);
+    const member_type = parseInt(e?.target?.member_type?.value);
     const data = {
       title, 
       price,
       status, 
       duration,
+      member_type
     };  
     if(duration != defaultInfo?.duration) {
       const confirm = window.confirm(`There's a change in the duration, this will affect the subscription of the subscribed members. Are you sure you want to continue?`);
 
       if(confirm) {
         setIsSubmitting(true)
-        execPost(); 
+        try {
+          const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
+          if (res.status === 200) {
+            toast.success('Plan updated successfully.', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false, 
+              closeOnClick: true, 
+              pauseOnHover: true,
+              draggable: true, 
+              progress: undefined, 
+              theme: "light", 
+            }); 
+            setModalInfo({ modalInfo: "", })
+            modalState.setState({ modalOpen: false }) 
+            refetchPromos(); 
+            setIsSubmitting(false)
+          }
+        } catch (error) {  
+          setIsSubmitting(false) 
+          if(error.status === 422) {
+            setErrors(error.data.errors);
+          }
+        } 
       }
       setIsSubmitting(false)
     }else {
       try {
         const res = await BaseApi.put(process.env.NEXT_PUBLIC_API_URL + "/promos/" + editInfo.id, data);
         if (res.status === 200) {
-          toast.success('Promo updated successfully.', {
+          toast.success('Plan updated successfully.', {
             position: "top-right",
-            autoClose: 5000,
+            autoClose: 3000,
             hideProgressBar: false, 
             closeOnClick: true, 
             pauseOnHover: true,
@@ -185,7 +193,7 @@ export default function EditPromo() {
             className="w-full shadow-[0_0_0_1px(#727272,878787)]"
             type="text"
             name="title"
-            placeholder="Promo Title"
+            placeholder="Plan Title"
             value={payload.title} 
             onChange={onChange}
           />
@@ -223,15 +231,58 @@ export default function EditPromo() {
           )}  
           </div> 
         )}  
+
+<div className="form-item mb-[15px]">
+            <label>Member Type</label>
+              <div className="flex gap-[5px]">
+                <div className="flex gap-[5px]">
+                  <input
+                    type="radio"
+                    id={`member-type-0`}
+                    name="member_type"
+                    value={0}
+                    checked={payload.member_type === 0 ? true : false}
+                    onChange={onChange}
+                  />
+                  <label
+                    className="cursor-pointer"
+                    htmlFor={`member-type-0`}
+                  >
+                    Non-member
+                  </label>
+                </div>
+                <div className="flex gap-[5px]">
+                  <input
+                    type="radio"
+                    id={`member-type-1`}
+                    name="member_type"
+                    value={1}
+                    checked={payload.member_type === 1 ? true : false}
+                    onChange={onChange}
+                  />
+                  <label
+                    className="cursor-pointer"
+                    htmlFor={`member-type-1`}
+                  >
+                    Member
+                  </label> 
+                </div>
+              </div>
+              {errorsService.findError(errors, "member_type") && (
+                  <p className="mt-2 text-red-500 text-xs">
+                    {errorsService.findError(errors, "member_type").member_type}
+                  </p> 
+                )} 
+            </div>  
   
-        <div className="form-item mb-[15px]">
-          <input type="checkbox" name="status" id="status" checked={payload.status ? true : false} onChange={onChange}/>
-          
-          <label htmlFor="status" className="select-none cursor-pointer">
-            <span className="ml-[10px]">Active</span>
-          </label>
-        </div>
-        
+            <div className="form-item mb-[15px]">
+              <input type="checkbox" name="status" id="status" checked={payload.status ? true : false} onChange={onChange}/>
+              
+              <label htmlFor="status" className="select-none cursor-pointer">
+                <span className="ml-[10px]">Active</span>
+              </label>
+            </div>
+            
 
         <button className="flex px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[20px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full">
         {isSubmitting && (

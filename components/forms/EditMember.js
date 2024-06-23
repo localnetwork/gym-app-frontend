@@ -79,11 +79,11 @@ export default function EditMember() {
         authService.refetchProfile(); 
         toast.success('User updated successfully.', {
           position: "top-right", 
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false, 
           closeOnClick: true, 
           pauseOnHover: true,
-          draggable: true, 
+          draggable: true,
           progress: undefined, 
           theme: "light", 
         }); 
@@ -340,6 +340,7 @@ export default function EditMember() {
                 </div>
               ))}
             </div> 
+          
             <div className="form-item mb-[15px]">
               <input 
               type="checkbox" 
