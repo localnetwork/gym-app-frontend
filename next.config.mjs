@@ -15,6 +15,12 @@ const nextConfig = {
         port: process.env.NEXT_PUBLIC_API_PORT,
         pathname: `/**`,
       },
+
+      {
+        protocol: "https",
+        hostname: "node-gym-backend.onrender.com",
+        pathname: `/**`,
+      },
     ],
   },
 };

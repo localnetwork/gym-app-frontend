@@ -17,7 +17,7 @@ export default function DeleteMember() {
         refetchMembers: state.refetchMembers,
         isMembersLoading: state.isMembersLoading,
       }));
- 
+
     const onYes = async() => {
           
         authService.refetchProfile(); 
