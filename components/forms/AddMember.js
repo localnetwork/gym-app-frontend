@@ -36,9 +36,11 @@ export default function AddMember() {
     editInfo: state.editInfo,
   })); 
 
-  const { isMembersLoading, refetchMembers } = useEntityState((state) => ({
+  const { isMembersLoading, refetchMembers, addMember, addMemberErrors } = useEntityState((state) => ({
     isMembersLoading: state.isMembersLoading,
     refetchMembers: state.refetchMembers,
+    addMember: state.addMember,
+    addMemberErrors: state.addMemberErrors,
   }));
  
   const roles = [
@@ -75,9 +77,12 @@ export default function AddMember() {
       role,
       password,
       confirm_password,
-    };
+    }; 
+ 
     try {
-      const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/users", data);
+      const res = await addMember(data); 
+
+      console.log(res); 
       if (res.status === 200) {
         toast.success(`${res.data.message}`, {
           position: "top-right", 
@@ -94,13 +99,41 @@ export default function AddMember() {
         refetchMembers(); 
         setIsSubmitting(false)
       } 
-    } catch (error) {  
+    }catch(error) {
       setIsSubmitting(false) 
       if(error.status === 422) {
         console.log('error.data.errors', error.data.errors)
         setErrors(error.data.errors);
-      }
+      } 
     }
+    // setErrors(addMemberErrors); 
+
+    // console.log('addMemberErrors', addMemberErrors)
+    // try {
+    //   const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/users", data);
+      // if (res.status === 200) {
+      //   toast.success(`${res.data.message}`, {
+      //     position: "top-right", 
+      //     autoClose: 3000,
+      //     hideProgressBar: false, 
+      //     closeOnClick: true, 
+      //     pauseOnHover: true,
+      //     draggable: true, 
+      //     progress: undefined, 
+      //     theme: "light", 
+      //   }); 
+      //   setModalInfo({ modalInfo: "", })
+      //   modalState.setState({ modalOpen: false }) 
+      //   refetchMembers(); 
+      //   setIsSubmitting(false)
+      // } 
+    // } catch (error) {  
+      // setIsSubmitting(false) 
+      // if(error.status === 422) {
+      //   console.log('error.data.errors', error.data.errors)
+      //   setErrors(error.data.errors);
+      // }
+    // }
   }
 
   const onChangeRegister = (data) => {

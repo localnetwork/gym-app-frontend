@@ -9,6 +9,10 @@ import EditMember from "../forms/EditMember";
 import DeleteMember from "../forms/DeleteUser";
 import AddSubscription from "../forms/AddSubscription";
 import ViewUserSubscriptions from "../forms/ViewUserSubscriptions";
+import AddNonMember from "../forms/AddNonMember";
+import ChangePasswordAdmin from "../forms/ChangePasswordAdmin";
+import SoftDeleteMember from "../forms/SoftDeleteUser";
+import RestoreUser from "../forms/RestoreUser";
 export default function Modal() {
   const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } = modalState((state) => ({
     modalOpen: state.modalOpen,
@@ -40,11 +44,23 @@ export default function Modal() {
     case "delete-member":
       form = <DeleteMember />;
       break;
+    case "soft-delete-member":
+      form = <SoftDeleteMember />;
+      break;
     case "add-subscription":
       form = <AddSubscription />;
       break;
     case "view-subscription":
       form = <ViewUserSubscriptions />;
+      break;
+    case "add-nonmember-transaction":
+      form = <AddNonMember />;
+      break;
+    case "change-password-admin":
+      form = <ChangePasswordAdmin />;
+      break;
+    case "restore-member":
+      form = <RestoreUser />;
       break;
     default:
       form = null;

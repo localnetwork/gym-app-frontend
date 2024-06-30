@@ -1,172 +1,246 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
+  @tailwind components;
+  @tailwind utilities;
 
-body {
-  background-color: #121212;
-  font-family: "Circular";
-  color: #fff;
-  font-size: 16px;
-}
+  @layer base {
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 20 14.3% 4.1%;
 
-.container {
-  @apply max-w-[1200px] mx-auto px-[15px];
-}
+      --card: 0 0% 100%;
+      --card-foreground: 20 14.3% 4.1%;
 
-@font-face {
-  font-family: "Circular";
-  src: url("/fonts/CircularSpotify-UI-Latin-OS2v3-Book.woff2");
-  font-weight: 400;
-}
+      --popover: 0 0% 100%;
+      --popover-foreground: 20 14.3% 4.1%;
 
-@font-face {
-  font-family: "Circular";
-  src: url("/fonts/CircularSpotify-UI-Latin-OS2v3-Bold.woff2");
-  font-weight: 700;
-}
+      --primary: 24 9.8% 10%;
+      --primary-foreground: 60 9.1% 97.8%;
 
-@font-face {
-  font-family: "Circular";
-  src: url("/fonts/CircularSpotify-UI-Latin-OS2v3-Black.woff2");
-  font-weight: 900;
-}
+      --secondary: 60 4.8% 95.9%;
+      --secondary-foreground: 24 9.8% 10%;
 
-.form-item input {
-  background-color: transparent;
-  border-radius: 4px;
-  padding: 10px 15px;
-  border: 1px solid #727272;
-}
+      --muted: 60 4.8% 95.9%;
+      --muted-foreground: 25 5.3% 44.7%;
 
-.gradient-black {
-  background: linear-gradient(rgba(255, 255, 255, 0.1) 0%, rgb(0, 0, 0) 100%);
-}
+      --accent: 60 4.8% 95.9%;
+      --accent-foreground: 24 9.8% 10%;
 
-.ns-container {
-  height: auto !important;
-}
-.chat-item {
-  margin-bottom: 15px;
-}
-.chat-message {
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-.chat-message iframe {
-  width: 100% !important;
-}
-.chat-sender {
-  font-size: 14px;
-  color: #939393;
-}
-.chat-date {
-  font-size: 12px;
-  opacity: 0.3;
-}
-.chat-badge {
-  background: #1ed760;
-  padding: 3px 10px 1px;
-  display: inline-block;
-  font-size: 12px;
-  color: #000;
-  border-radius: 5px;
-  margin-bottom: 15px;
-}
-#chat-messages > div:not(:last-of-type) .chat-badge {
-  display: none !important;
-}
-@media (min-width: 568px) {
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 60 9.1% 97.8%;
+
+      --border: 20 5.9% 90%;
+      --input: 20 5.9% 90%;
+      --ring: 20 14.3% 4.1%;
+
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      --background: 20 14.3% 4.1%;
+      --foreground: 60 9.1% 97.8%;
+
+      --card: 20 14.3% 4.1%;
+      --card-foreground: 60 9.1% 97.8%;
+
+      --popover: 20 14.3% 4.1%;
+      --popover-foreground: 60 9.1% 97.8%;
+
+      --primary: 60 9.1% 97.8%;
+      --primary-foreground: 24 9.8% 10%;
+
+      --secondary: 12 6.5% 15.1%;
+      --secondary-foreground: 60 9.1% 97.8%;
+
+      --muted: 12 6.5% 15.1%;
+      --muted-foreground: 24 5.4% 63.9%;
+
+      --accent: 12 6.5% 15.1%;
+      --accent-foreground: 60 9.1% 97.8%;
+
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 60 9.1% 97.8%;
+
+      --border: 12 6.5% 15.1%;
+      --input: 12 6.5% 15.1%;
+      --ring: 24 5.7% 82.9%;
+    }
+  }
+
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
+  }
+
+
+  body {
+    background-color: #121212;
+    font-family: "Circular";
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .container {
+    @apply max-w-[1200px] mx-auto px-[15px];
+  }
+  
+  @font-face {
+    font-family: "Circular";
+    src: url("/fonts/CircularSpotify-UI-Latin-OS2v3-Book.woff2");
+    font-weight: 400;
+  }
+  
+  @font-face {
+    font-family: "Circular";
+    src: url("/fonts/CircularSpotify-UI-Latin-OS2v3-Bold.woff2");
+    font-weight: 700;
+  }
+  
+  @font-face {
+    font-family: "Circular";
+    src: url("/fonts/CircularSpotify-UI-Latin-OS2v3-Black.woff2");
+    font-weight: 900;
+  }
+  
+  .form-item input {
+    background-color: transparent;
+    border-radius: 4px;
+    padding: 10px 15px;
+    border: 1px solid #727272;
+  }
+  
+  .gradient-black {
+    background: linear-gradient(rgba(255, 255, 255, 0.1) 0%, rgb(0, 0, 0) 100%);
+  }
+  
+  .ns-container {
+    height: auto !important;
+  }
+  .chat-item {
+    margin-bottom: 15px;
+  }
+  .chat-message {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
   .chat-message iframe {
-    height: 80px;
-    background-color: #000;
-    border-radius: 15px;
-    overflow: hidden;
+    width: 100% !important;
   }
-}
-
-/* show only on touch devices */
-@media (hover: none),
-  (hover: on-demand),
-  (-moz-touch-enabled: 1),
-  (pointer: coarse) {
-  .ns-container > * {
-    overflow-y: auto;
+  .chat-sender {
+    font-size: 14px;
+    color: #939393;
   }
-}
-
-.chat-overlay.active {
-  visibility: inherit;
-  opacity: 0.7;
-  transition: all ease 0.5s;
-}
-.chat-overlay {
-  visibility: hidden;
-  opacity: 0;
-  transition: all ease 0.5s;
-}
-.chat-container.active {
-  transform: translateX(0);
-  transition: all ease 0.5s;
-}
-.chat-container {
-  transform: translateX(500%);
-  transition: all ease 0.5s;
-}
-
-/* Style the SVG path for the checkmark when the checkbox is checked */
-input[type="radio"]:checked ~ label:before svg {
-  visibility: visible;
-  fill: green; /* Change this to your desired checkmark color */
-}
-
-/* Reduce opacity of labels without a checked checkbox */
-.avatar-item:not(:has(input:checked)) label {
-  opacity: 0.5; /* Adjust opacity as needed */
-}
-
-.has-avatar-selections:has(input:not(:checked)) label {
-  opacity: 1; /* Adjust opacity as needed */
-}
-.has-avatar-selections label:hover {
-  opacity: 1 !important;
-}
-
-.avatar-selections svg {
-  width: 100%;
-  max-width: 100px;
-  height: 100%;
-}
-
-.chat-avatar svg {
-  width: 100%;
-  height: 100%;
-}
-
-.shadow-fill {
-  background: linear-gradient(180deg, transparent, #000);
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.avatar svg {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.dropdown-info {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.2s ease;
-}
-
-.dropdown-info.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  transition: all 0.2s ease;
-}
+  .chat-date {
+    font-size: 12px;
+    opacity: 0.3;
+  }
+  .chat-badge {
+    background: #1ed760;
+    padding: 3px 10px 1px;
+    display: inline-block;
+    font-size: 12px;
+    color: #000;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+  #chat-messages > div:not(:last-of-type) .chat-badge {
+    display: none !important;
+  }
+  @media (min-width: 568px) {
+    .chat-message iframe {
+      height: 80px;
+      background-color: #000;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+  }
+  
+  /* show only on touch devices */
+  @media (hover: none),
+    (hover: on-demand),
+    (-moz-touch-enabled: 1),
+    (pointer: coarse) {
+    .ns-container > * {
+      overflow-y: auto;
+    }
+  }
+  
+  .chat-overlay.active {
+    visibility: inherit;
+    opacity: 0.7;
+    transition: all ease 0.5s;
+  }
+  .chat-overlay {
+    visibility: hidden;
+    opacity: 0;
+    transition: all ease 0.5s;
+  }
+  .chat-container.active {
+    transform: translateX(0);
+    transition: all ease 0.5s;
+  }
+  .chat-container {
+    transform: translateX(500%);
+    transition: all ease 0.5s;
+  }
+  
+  /* Style the SVG path for the checkmark when the checkbox is checked */
+  input[type="radio"]:checked ~ label:before svg {
+    visibility: visible;
+    fill: green; /* Change this to your desired checkmark color */
+  }
+  
+  /* Reduce opacity of labels without a checked checkbox */
+  .avatar-item:not(:has(input:checked)) label {
+    opacity: 0.5; /* Adjust opacity as needed */
+  }
+  
+  .has-avatar-selections:has(input:not(:checked)) label {
+    opacity: 1; /* Adjust opacity as needed */
+  }
+  .has-avatar-selections label:hover {
+    opacity: 1 !important;
+  }
+  
+  .avatar-selections svg {
+    width: 100%;
+    max-width: 100px;
+    height: 100%;
+  }
+  
+  .chat-avatar svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .shadow-fill {
+    background: linear-gradient(180deg, transparent, #000);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+  
+  .avatar svg {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .dropdown-info {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+  }
+  
+  .dropdown-info.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: all 0.2s ease;
+  } 

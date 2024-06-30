@@ -359,6 +359,13 @@ export default function EditMember() {
                 </p>
               )}
             </div>
+              
+
+            <div className="underline inline-block mb-5 cursor-pointer select-none text-[#009CFF]"
+              onClick={() => setModalInfo({ id: "change-password-admin", title: `Change Password for ${payload.name}` })}
+            >
+              Click here to change password
+            </div>
         <button className="flex px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[20px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full">
         {isSubmitting && (
                 <svg

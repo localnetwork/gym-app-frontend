@@ -15,6 +15,11 @@ export default function AuthHeader({ profile }) {
       url: "/plans",
       roleRestrictions: [1],
     },
+    {
+      name: "Promos",
+      url: "/member-plans",
+      roleRestrictions: [3],
+    }, 
     { 
       name: "Members",
       url: "/users",
@@ -24,6 +29,11 @@ export default function AuthHeader({ profile }) {
       name: "Non-members",
       url: "/non-members",
       roleRestrictions: [1,2],
+    },
+    {
+      name: "Subscriptions",
+      url: '/subscriptions',
+      roleRestrictions: [1],
     }, 
     {
       name: "Durations",
@@ -143,7 +153,7 @@ export default function AuthHeader({ profile }) {
             )}
 
             <div className="border-b border-gray-200" />
-            <div
+            {/* <div
               className="cursor-pointer hover:bg-[#f3f3f3] p-2 flex gap-x-[5px]"
               onClick={() => {
                 router.push(`/user/${profile?.id}`);
@@ -193,7 +203,7 @@ export default function AuthHeader({ profile }) {
                 />
               </svg>
               Settings
-            </div>
+            </div> */}
             <div
               className="cursor-pointer hover:bg-[#f3f3f3] p-2 flex items-center gap-x-[5px]"
               onClick={logoutHandler}

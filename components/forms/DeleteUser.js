@@ -12,33 +12,39 @@ export default function DeleteMember() {
         modalOpen: state.modalOpen,
         setClearModal: state.setClearModal,
       })); 
-    const { members, refetchMembers, isMembersLoading } = useEntityState((state) => ({
-        members: state.members,
-        refetchMembers: state.refetchMembers,
-        isMembersLoading: state.isMembersLoading,
-      }));
+    const {  refetchDeletedMembers,  } = useEntityState((state) => ({
+        refetchDeletedMembers: state.refetchDeletedMembers,
+    }));
 
-    const onYes = async() => {
-          
-        authService.refetchProfile(); 
-        try {
-            const res = await BaseApi.delete(process.env.NEXT_PUBLIC_API_URL + `/users/${deleteInfo.id}`);
-            if(res.status === 200) {
-                setClearModal();
-                toast.success("User deleted successfully");
-                refetchMembers();
+      const onYes = async () => {
+        const confirmed = window.confirm("Are you sure you want to delete this user? This action cannot be undone.");
+    
+        if (confirmed) {
+            try {
+                const res = await BaseApi.delete(`${process.env.NEXT_PUBLIC_API_URL}/users/${deleteInfo.id}`);
+    
+                if (res.status === 200) {
+                    setClearModal(); // Assuming this function clears the modal state
+                    toast.success("User deleted successfully");
+                    refetchDeletedMembers(); // Assuming this function refetches member data
+                } else {
+                    // Handle unexpected response status codes
+                    console.error("Unexpected status code:", res.status);
+                    serverError(); // Assuming this function handles server errors
+                    refetchDeletedMembers(); // Assuming this function refetches member data
+                }
+            } catch (error) {
+                console.error("Error deleting user:", error);
+    
+                if (error.response && error.response.status === 422) {
+                    toast.error(error.response.data.message);
+                } else {
+                    serverError(); // Assuming this function handles server errors
+                }
+                refetchDeletedMembers(); // Assuming this function refetches member data
             }
-        }catch(error) {
-            console.log('Error', error)  
-            if(error && error.status === 422) {
-                toast.error(error.data.message);
-            }
-            if(error && error.status === 500) {
-                serverError();
-            }
-            refetchMembers(); 
         }
-    }
+    }; 
     
     const onNo = () => {
         modalState.setState({ modalOpen: false }) 

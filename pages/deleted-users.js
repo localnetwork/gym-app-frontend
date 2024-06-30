@@ -18,7 +18,7 @@ import authService from "@/lib/services/authService";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Members() {
+export default function DeletedUsers() {
 
   const profile = persistentStore((state) => state.profile);
   
@@ -27,17 +27,17 @@ export default function Members() {
     modalInfo: state.modalInfo,
     setModalInfo: state.setModalInfo,
   })); 
-
-
-  const { members, isMembersLoading, refetchMembers } = useEntityState((state) => ({
-    members: state.members,
-    isMembersLoading: state.isMembersLoading,
-    refetchMembers: state.refetchMembers,
+  const { deletedMembers, isDeletedMembersLoading, refetchDeletedMembers } = useEntityState((state) => ({
+    deletedMembers: state.deletedMembers,
+    isDeletedMembersLoading: state.isDeletedMembersLoading,
+    refetchDeletedMembers: state.refetchDeletedMembers,
   }));  
   
   useEffect(() => {
-    refetchMembers();
-  } , [refetchMembers]);
+    refetchDeletedMembers();
+  } , [refetchDeletedMembers]);
+
+  console.log('deletedMembers', deletedMembers)
 
   return (
     <div className="py-[30px]">
@@ -52,28 +52,11 @@ export default function Members() {
               <h1
                 className={`text-[40px] font-black text-black ${montserrat.className}`}
               >
-                Members
+                Deleted Users
               </h1>
-              <button
-                className="inline-flex max-w-[250px] px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[20px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full"
-                onClick={() => {
-                  setModalInfo({
-                    id: "add-member", 
-                    title: "Add Member",
-                  });
-                  modalState.setState({ modalOpen: true });
-                }}
-              >
-                Add Member
-              </button>
             </div> 
-              
-            <div>
-              <Link href="/deleted-users" className="hover:underline inline-block mb-3 text-red-700 font-bold">
-                View Deleted Users
-              </Link>
-            </div> 
-            {isMembersLoading ? (
+  
+            {isDeletedMembersLoading ? (
               <div>
                 {Array.from({ length: 8 }, (_, index) => (
                   <div key={index} className="animate-pulse flex space-x-4">
@@ -90,15 +73,15 @@ export default function Members() {
               </div>
             ) : (
               <div> 
-                {members?.length === 0 && (
+                {deletedMembers?.length === 0 && (
                   <div className="flex flex-col items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-[150px]">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
                     </svg>
-                    <h2 className="text-xl font-bold">No promos available at the moment. Please try again later.</h2>
+                    <h2 className="text-xl font-bold">No deleted users. Please try again later.</h2>
                   </div>   
                 )} 
-                {members?.map((member, index) => (
+                {deletedMembers?.map((member, index) => (
                   <div key={index} className={`mb-4 bg-[#fff] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.2)] hover:border-[#ccc] hover:border-[1px] rounded-[10px] p-[30px] ${profile?.user_id == member.user_id ? '!border-green-500 border-[1px]' : ''}`}>
                     {profile?.user_id == member.user_id && (
                       <span className="bg-green-500 text-[12px] font-bold px-[10px] py-[5px] rounded-[10px] inline-block mb-[15px]">Your account</span>
@@ -148,33 +131,22 @@ export default function Members() {
                         )}
                       </div>
  
-                    <div className="mt-[60px] flex flex-wrap gap-[15px]"> 
-                      <button 
+                    <div className="mt-[60px] flex flex-wrap gap-[15px]">
+                    <button
                       className="inline-flex max-w-[200px] px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full"
                       onClick={
-                        () => { 
-                          modalState.setState({ modalOpen: true, editInfo: { id: member.user_id }, modalInfo: { id: "edit-member", title: `Edit ${member.name} - ${authService.getRole(member.role)}` } });
+                        () => {
+                          modalState.setState({ modalOpen: true, deleteInfo: { id: member.user_id }, modalInfo: { id: "restore-member", title: `Are you sure you want to restore ${member.name} - ${authService.getRole(member.role)} ?` } });
                         }
-                      }>Edit User</button>
+                      }>Restore Member</button> 
+
                       <button
                       className="inline-flex max-w-[200px] px-[30px] items-center justify-center hover:bg-red-700 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-red-500 py-[10px] text-black text-uppercase w-full"
                       onClick={
                         () => {
-                          modalState.setState({ modalOpen: true, deleteInfo: { id: member.user_id }, modalInfo: { id: "soft-delete-member", title: `Are you sure you want to delete ${member.name} - ${authService.getRole(member.role)} ?` } });
+                          modalState.setState({ modalOpen: true, deleteInfo: { id: member.user_id }, modalInfo: { id: "delete-member", title: `Are you sure you want to delete ${member.name} - ${authService.getRole(member.role)} ?` } });
                         }
-                      }>Delete User</button>
-
-                      {member.role === 3 && (
-                        <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
-                          onClick={() => {
-                            modalState.setState({ modalOpen: true, modalInfo: { id: "add-subscription", title: `Add subscription for ${member.name}`, memberId: member.user_id } });
-                          }}
-                        >
-                          Add Subscription
-                        </button>
-                      )}
-
-
+                      }>Force Delete</button>
                       {member.role === 3 && (
                         <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
                           onClick={() => {
