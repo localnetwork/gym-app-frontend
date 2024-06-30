@@ -11,12 +11,12 @@ export default function About() {
       image: "/images/jogging.jpg",
     },
     {
-      title: "Boxing",
-      image: "/images/boxing.jpg",
+      title: "Bodybuilding",
+      image: "/images/bodybuilding.jpg",
     },
     {
-      title: "Boxing",
-      image: "/images/boxing.jpg",
+      title: "Yoga",
+      image: "/images/yoga.jpg",
     },
   ];
   return (

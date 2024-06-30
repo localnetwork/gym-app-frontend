@@ -18,11 +18,6 @@ export default function Footer() {
             <div className="flex flex-col">
               <div>
                 <Link href="/" className="hover:underline">
-                  Employee Wellness
-                </Link>
-              </div>
-              <div>
-                <Link href="/" className="hover:underline">
                   Media
                 </Link>
               </div>
@@ -32,7 +27,7 @@ export default function Footer() {
                 </Link>
               </div>
               <div>
-                <Link href="/" className="hover:underline">
+                <Link href="/privacy" className="hover:underline">
                   Privacy Notice
                 </Link>
               </div>
@@ -42,7 +37,7 @@ export default function Footer() {
             <h3 className="font-black text-[20px] mb-[15px] uppercase">Gyms</h3>
             <div className="flex flex-col">
               <div>
-                <Link href="/" className="hover:underline">
+                <Link href="/locations" className="hover:underline">
                   Find A Gym
                 </Link>
               </div>

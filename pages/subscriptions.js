@@ -19,13 +19,14 @@ import Head from "next/head";
 
 
 import { Montserrat } from "next/font/google";
-import helper from "@/lib/scrap/helper";
 const montserrat = Montserrat({
   weight: ["400", "700", "900"],
   style: ["normal", "italic"],
   subsets: ["latin"],
   display: "swap",
 }); 
+
+import helper from "@/lib/scrap/helper";
 
 export default function Subscriptions() {
     const [subscriptions, setSubscriptions] = useState([]);
