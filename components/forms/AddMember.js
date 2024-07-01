@@ -81,8 +81,34 @@ export default function AddMember() {
  
     try {
       const res = await addMember(data); 
+      if (res.status === 200) {
+        toast.success(`${res.data.message}`, {
+          position: "top-right", 
+          autoClose: 3000,
+          hideProgressBar: false, 
+          closeOnClick: true, 
+          pauseOnHover: true,
+          draggable: true, 
+          progress: undefined, 
+          theme: "light", 
+        }); 
+        setModalInfo({ modalInfo: "", })
+        modalState.setState({ modalOpen: false }) 
+        refetchMembers(); 
+        setIsSubmitting(false)
+      }  
+    }catch(error) {
+      console.log('error', error)
+      setIsSubmitting(false) 
+      if(error.status === 422) {
+        setErrors(error.data.errors);
+      } 
+    }
+    setErrors(addMemberErrors); 
 
-      console.log(res); 
+    console.log('addMemberErrors', addMemberErrors)
+    try {
+      const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/users", data);
       if (res.status === 200) {
         toast.success(`${res.data.message}`, {
           position: "top-right", 
@@ -99,41 +125,13 @@ export default function AddMember() {
         refetchMembers(); 
         setIsSubmitting(false)
       } 
-    }catch(error) {
+    } catch (error) {  
       setIsSubmitting(false) 
       if(error.status === 422) {
         console.log('error.data.errors', error.data.errors)
         setErrors(error.data.errors);
-      } 
+      }
     }
-    // setErrors(addMemberErrors); 
-
-    // console.log('addMemberErrors', addMemberErrors)
-    // try {
-    //   const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/users", data);
-      // if (res.status === 200) {
-      //   toast.success(`${res.data.message}`, {
-      //     position: "top-right", 
-      //     autoClose: 3000,
-      //     hideProgressBar: false, 
-      //     closeOnClick: true, 
-      //     pauseOnHover: true,
-      //     draggable: true, 
-      //     progress: undefined, 
-      //     theme: "light", 
-      //   }); 
-      //   setModalInfo({ modalInfo: "", })
-      //   modalState.setState({ modalOpen: false }) 
-      //   refetchMembers(); 
-      //   setIsSubmitting(false)
-      // } 
-    // } catch (error) {  
-      // setIsSubmitting(false) 
-      // if(error.status === 422) {
-      //   console.log('error.data.errors', error.data.errors)
-      //   setErrors(error.data.errors);
-      // }
-    // }
   }
 
   const onChangeRegister = (data) => {
