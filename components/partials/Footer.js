@@ -17,13 +17,8 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col">
               <div>
-                <Link href="/" className="hover:underline">
+                <Link href="/gallery" className="hover:underline">
                   Media
-                </Link>
-              </div>
-              <div>
-                <Link href="/" className="hover:underline">
-                  Careers
                 </Link>
               </div>
               <div>
