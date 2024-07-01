@@ -40,17 +40,13 @@ export default function ChangePasswordAdmin() {
     getDurations();
   }, []);
 
-  const options = durations.map((duration) => ({
-    value: duration.id,
-    label: duration.title,
-  }));  
-
   const onSubmit = () => async (e) => {
     e.preventDefault();
     setIsSubmitting(true)
     const data = {
       password: e?.target?.password?.value,
       confirm_password: e?.target?.confirm_password?.value,
+      id: modalInfo?.user_id, 
     }; 
  
     try {

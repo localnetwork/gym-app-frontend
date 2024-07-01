@@ -362,7 +362,7 @@ export default function EditMember() {
               
 
             <div className="underline inline-block mb-5 cursor-pointer select-none text-[#009CFF]"
-              onClick={() => setModalInfo({ id: "change-password-admin", title: `Change Password for ${payload.name}` })}
+              onClick={() => setModalInfo({ id: "change-password-admin", title: `Change Password for ${payload.name}`, user_id: editInfo.id })}
             >
               Click here to change password
             </div>
