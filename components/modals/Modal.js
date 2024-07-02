@@ -13,6 +13,8 @@ import AddNonMember from "../forms/AddNonMember";
 import ChangePasswordAdmin from "../forms/ChangePasswordAdmin";
 import SoftDeleteMember from "../forms/SoftDeleteUser";
 import RestoreUser from "../forms/RestoreUser";
+import AddDuration from "../forms/AddDuration";
+import DeleteDuration from "../forms/DeleteDuration";
 export default function Modal() {
   const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } = modalState((state) => ({
     modalOpen: state.modalOpen,
@@ -61,6 +63,12 @@ export default function Modal() {
       break;
     case "restore-member":
       form = <RestoreUser />;
+      break;
+    case "add-duration":
+      form = <AddDuration />;
+      break;
+    case "delete-duration":
+      form = <DeleteDuration />;
       break;
     default:
       form = null;

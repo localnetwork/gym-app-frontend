@@ -124,12 +124,6 @@ export default function Durations() {
               </div>
             ) : (
                 <div>
-                    {/* {membershipDurations?.map((duration, index) => (
-                        <div key={index}>
-                            {duration.title}
-                        </div>
-                    ))} */}
-
                       <Table>
                           <TableHeader>
                               <TableRow>
@@ -153,9 +147,18 @@ export default function Durations() {
                                           </DropdownMenuTrigger>
                                           <DropdownMenuContent align="end">
                                             <DropdownMenuCheckboxItem
-                                                  className="capitalize"
+                                                  className="capitalize outline-none"
                                                 >
-                                                  Hello
+                                                  <div className="py-[5px] cursor-pointer" onClick={() => {
+                                              setModalInfo({
+                                                id: "delete-duration",
+                                                title: `Delete duration ${item?.title}`,
+                                                deleteId: item?.id,
+                                              });
+                                              modalState.setState({ modalOpen: true });
+                                            }}>
+                                              Delete
+                                            </div>
                                             </DropdownMenuCheckboxItem>
                                           </DropdownMenuContent>
                                         </DropdownMenu>
