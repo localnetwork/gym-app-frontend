@@ -23,14 +23,10 @@ export default function Gallery() {
     const test = groupByThree(gallery);
 
     const isOdd = (num) => num % 2 === 1;
-
-
-    console.log(test)
-
     return(
-        <div class="py-[30px]">
-            <div class="container">
-                <div class="bg-[#EFF0F0] text-[#121212] p-[50px] rounded-[15px]">
+        <div className="py-[30px]">
+            <div className="container">
+                <div className="bg-[#EFF0F0] text-[#121212] p-[50px] rounded-[15px]">
                     <h1 className={`text-[40px] font-black text-black ${montserrat.className}`}>
                         Gallery
                     </h1>

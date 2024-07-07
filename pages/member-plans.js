@@ -1,7 +1,9 @@
-import { Montserrat } from "next/font/google";
+
 import BaseApi from "@/lib/api/_base.api";
 import { useEffect, useState } from "react";
 
+
+import { Montserrat } from "next/font/google";
 // If loading a variable font, you don't need to specify the font weight
 const montserrat = Montserrat({
   weight: ["400", "700", "900"],
@@ -126,6 +128,14 @@ export default function Promos() {
                           </div>
                       </div>
                     )}
+
+
+                    <div className="inline-flex max-w-[220px] mt-[15px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full" onClick={() => {
+                      setModalInfo({ id: "checkout-modal", title: `Checkout`, promo: promo });
+                      modalState.setState({ modalOpen: true });
+                    }}>
+                      Checkout
+                    </div>
                   </div>
                 ))}
               </div>

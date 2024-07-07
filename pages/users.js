@@ -128,7 +128,7 @@ export default function Members() {
                           </div>
                         </div>
 
-                        {member?.qr_code && member.role === 3 && (
+                        {(member?.subscription?.totalDays > 0 && member?.qr_code && member.role === 3) && (
                           <div className="flex flex-col items-center">
                             <Link title="View QR Code" href={process.env.NEXT_PUBLIC_API_URL + member.qr_code} target="_blank" className="group relative inline-block">
                               <span className="group-hover:!flex hidden transition absolute top-0 left-0 w-full h-full z-1 justify-center items-center text-white bg-[#000] bg-opacity-50">
@@ -174,8 +174,7 @@ export default function Members() {
                         </button>
                       )}
 
-
-                      {member.role === 3 && (
+                      {member?.subscription?.totalDays > 0 && member.role === 3 && (
                         <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
                           onClick={() => {
                             modalState.setState({ modalOpen: true, modalInfo: { id: "view-subscription", title: `Subscriptions of ${member.name}`, memberId: member?.uuid } });

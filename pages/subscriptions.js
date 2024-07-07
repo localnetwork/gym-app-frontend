@@ -35,7 +35,7 @@ export default function Subscriptions() {
         console.log('Subscriptions page');
         const fetchSubscriptions = async() => {
             try {
-                const res = await BaseApi.get(process.env.NEXT_PUBLIC_API_URL + "/subscriptions");
+                const res = await BaseApi.get(process.env.NEXT_PUBLIC_API_URL + "/orders");
                 setSubscriptions(res.data.data);
             }catch(error) {
                 console.log('Error', error);

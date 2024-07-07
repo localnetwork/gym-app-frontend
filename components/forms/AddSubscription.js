@@ -72,9 +72,9 @@ export default function AddSubscription() {
     setIsSubmitting(true);
   
     try {
-      const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/subscriptions", data);
+      const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/orders", data);
       if (res.status === 200) {
-        toast.success('Subscription added successfully.', {
+        toast.success('Order added successfully.', {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
