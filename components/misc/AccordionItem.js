@@ -3,8 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import modalState from "@/lib/store/modalState";
-
-export default function AccordionItem({ item }) {
+import persistentStore from "@/lib/store/persistentStore";
+export default function AccordionItem({ item, ...props }) {
+    const profile = persistentStore((state) => state.profile); 
+    const { color } = props; 
     const [isOpen, setIsOpen] = useState(false);
     let statusBgClass;
 
@@ -38,7 +40,7 @@ export default function AccordionItem({ item }) {
             </div>
 
             {isOpen && (
-                <div className="bg-[#dcdcdc] p-[15px] min-h-[150px]">
+                <div className={`p-[15px] min-h-[150px]`} style={{ backgroundColor: color || "#dcdcdc" }}>
                     <h2 className="font-bold text-[15px] mb-2">Order Information</h2>
                     <div>
                         Ordered by: {item?.availed_by}
@@ -69,7 +71,7 @@ export default function AccordionItem({ item }) {
                     
                     <table className="w-full order-detail-table">
                         <thead>
-                            <tr className="bg-[#afafaf]">
+                            <tr className={`${color ? `bg-[${color}]` : "bg-[#dcdcdc]"}`}>
                                 <th className="py-[5px] border-r-[1px] border-[#ccc]">Availed Promo</th>
                                 <th className="py-[5px] border-r-[1px] border-[#ccc]">Price</th>
                                 <th className="py-[5px] border-r-[1px] border-[#ccc]">Status</th>
@@ -80,7 +82,7 @@ export default function AccordionItem({ item }) {
                             </tr>
                         </thead>
                         <tbody className="bg-white">
-                            <tr className="text-center">
+                            <tr className={`text-center`} style={{ color: color || "" }}>
                                 <td className="p-[15px]">{item?.promo_title}</td>
                                 <td className="p-[15px]">{helper.priceFormatter(item?.promo_price)}</td>
                                 <td className="p-[15px]">
@@ -110,7 +112,7 @@ export default function AccordionItem({ item }) {
                     </table>
                             
                             
-                    {item?.order_status === "pending" && payment_method !== 'paypal' && (
+                    {item?.order_status === "pending" && payment_method !== 'paypal' && profile.role !== 3 && (
                         <>
                             <div className="flex gap-x-[15px]"> 
                                 <div onClick={

@@ -1,5 +1,6 @@
-import { Montserrat } from "next/font/google";
+
 import Head from "next/head";
+import { Montserrat } from "next/font/google";
 const montserrat = Montserrat({
   weight: ["400", "700", "900"],
   style: ["normal", "italic"],
