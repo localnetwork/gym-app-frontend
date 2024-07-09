@@ -244,3 +244,7 @@
     transform: translateY(0);
     transition: all 0.2s ease;
   } 
+
+  .order-detail-table tr, .order-detail-table td {
+    border: 1px solid #ccc; 
+  }

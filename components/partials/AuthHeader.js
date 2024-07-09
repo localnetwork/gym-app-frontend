@@ -31,8 +31,8 @@ export default function AuthHeader({ profile }) {
       roleRestrictions: [1,2],
     },
     {
-      name: "Subscriptions",
-      url: '/subscriptions',
+      name: "Orders",
+      url: '/orders',
       roleRestrictions: [1],
     }, 
     {

@@ -50,6 +50,10 @@ export default function Promos() {
 //     return <Page403 />
 //   }
 
+  if(!profile) {
+    return <Page403 />
+  }
+
   const priceFormatter = (price) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",

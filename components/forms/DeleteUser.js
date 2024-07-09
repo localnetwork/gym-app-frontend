@@ -11,7 +11,7 @@ export default function DeleteMember() {
         setModalInfo: state.setModalInfo,
         modalOpen: state.modalOpen,
         setClearModal: state.setClearModal,
-      })); 
+    })); 
     const {  refetchDeletedMembers,  } = useEntityState((state) => ({
         refetchDeletedMembers: state.refetchDeletedMembers,
     }));

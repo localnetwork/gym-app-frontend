@@ -16,6 +16,8 @@ import RestoreUser from "../forms/RestoreUser";
 import AddDuration from "../forms/AddDuration";
 import DeleteDuration from "../forms/DeleteDuration";
 import CheckoutModalForm from "../forms/CheckoutModalForm";
+import ApproveOrder from "../forms/ApproveOrder";
+import RejectOrder from "../forms/RejectOrder";
 export default function Modal() {
   const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } = modalState((state) => ({
     modalOpen: state.modalOpen,
@@ -27,7 +29,7 @@ export default function Modal() {
 
 
   let form = null;
-
+  console.log('modalInfo.id', modalInfo.id)
   switch (modalInfo.id) {
     case "add-promo":
       form = <AddPromo />;
@@ -74,6 +76,12 @@ export default function Modal() {
     case "checkout-modal":
       form = <CheckoutModalForm />;
       break;
+    case "approve-order":
+      form = <ApproveOrder />
+      break; 
+    case "cancel-order":
+      form = <RejectOrder />
+      break; 
     default:
       form = null;
   } 

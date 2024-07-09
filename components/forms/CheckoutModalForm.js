@@ -7,6 +7,7 @@ import axios from "axios";
 import FormTest from "form-data";
 import errorsService from "@/lib/services/errorsService";
 import { Link } from "lucide-react";
+import { toast } from "react-toastify";
 export default function CheckoutModalForm() {
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [payload, setPayload] = useState({});
@@ -29,6 +30,7 @@ export default function CheckoutModalForm() {
             }
         } catch (error) {
             console.log('Error', error);
+            
         }
     }, []);
 
@@ -62,9 +64,6 @@ export default function CheckoutModalForm() {
         }else {
             setIsLoadingText('Processing your order...')
         }
-        // for (const [key, value] of formData.entries()) {
-        //     console.log(`${key}:`, value);
-        // }
         try {
             const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/checkout", formData, {
                 headers: {
@@ -82,9 +81,11 @@ export default function CheckoutModalForm() {
             if(error?.data?.errors) {
                 setErrors(error.data.errors);
             }
+            if(error.status === 400) {
+                toast.error(error.data.error);
+            }
         }
     }; 
-    console.log('selectedImage', selectedImage)
     return (
         <div>
             <form onSubmit={onSubmit}>

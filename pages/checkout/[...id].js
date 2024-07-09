@@ -3,7 +3,9 @@ import axios from "axios";
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import { Montserrat } from "next/font/google";
+import persistentStore from "@/lib/store/persistentStore";  
 import Page404 from "@/components/statuses/Page404";
+import authService from "@/lib/services/authService";
 // If loading a variable font, you don't need to specify the font weight
 const montserrat = Montserrat({
   weight: ["400", "700", "900"],
@@ -16,6 +18,8 @@ export default function Checkout() {
     const [orderInfo, setOrderInfo] = useState({});
     const [isPageNotFound, setIsPageNotFound] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+
+    const profile = persistentStore((state) => state.profile);  
 
     const executePayment = async () => {
         const { token, id, paymentId, PayerID } = router.query;
