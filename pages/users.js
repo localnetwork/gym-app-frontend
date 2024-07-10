@@ -164,7 +164,7 @@ export default function Members() {
                         }
                       }>Delete User</button>
 
-                      {member.role === 3 && (
+                      {/* {member.role === 3 && (
                         <button className="inline-flex max-w-[220px] px-[30px] items-center justify-center hover:bg-green-600 text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
                           onClick={() => {
                             modalState.setState({ modalOpen: true, modalInfo: { id: "add-subscription", title: `Add subscription for ${member.name}`, memberId: member.user_id } });
@@ -182,7 +182,7 @@ export default function Members() {
                         > 
                           View Subscriptions
                         </button> 
-                      )}
+                      )} */}
                     </div> 
                   </div>
                 ))}
