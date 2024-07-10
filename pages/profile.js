@@ -8,6 +8,7 @@ import { useState } from "react";
 import UserOrders from "@/components/blocks/UserOrders";
 import EditProfile from "@/components/forms/EditProfile";
 import EditProfilePassword from "@/components/forms/EditProfilePassword";
+import helper from "@/lib/scrap/helper";
 const montserrat = Montserrat({
   weight: ["400", "700", "900"],
   style: ["normal", "italic"],
@@ -18,6 +19,18 @@ const montserrat = Montserrat({
 export default function Profile() {
   const profile = persistentStore((state) => state.profile);
   const [currentTab, setCurrentTab] = useState("about");
+  const subscriptionStatus = profile?.subscription?.status;
+  let subscriptionBg;
+
+  if (subscriptionStatus === "active") {
+    subscriptionBg = "#2d9258";
+  } else if (subscriptionStatus === "expired") {
+    subscriptionBg = "#ba3434";
+  } else if (subscriptionStatus === "no_subscription") {
+    subscriptionBg = "#9c5f23";
+  } else {
+    subscriptionBg = "#2d9258";
+  }
 
   return (
     <div className={`bg-[#1E1F22] py-[50px] min-h-[80vh]`}>
@@ -169,11 +182,21 @@ export default function Profile() {
                       )}
 
                       {profile?.subscription && (
-                        <div>
-                          {console.log(
-                            "profile?.subscription",
-                            profile?.subscription
-                          )}
+                        <div className="">
+                          <div className="font-bold mb-1">
+                            Subscription Info
+                          </div>
+                          <div className="flex gap-x-[5px]">
+                            <span
+                              className="px-[5px] rounded-[5px]"
+                              style={{ background: subscriptionBg }}
+                            >
+                              {subscriptionStatus}
+                            </span>
+                            {helper.daysFormatter(
+                              profile?.subscription.remainingDays
+                            )}
+                          </div>
                         </div>
                       )}
                     </>

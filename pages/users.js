@@ -168,7 +168,8 @@ export default function Members() {
                       </div>
                     </div>
 
-                    {member?.subscription?.totalDays > 0 &&
+                    {(member?.subscription?.totalDays === 0 ||
+                      member?.subscription?.totalDays > 0) &&
                       member?.qr_code &&
                       member.role === 3 && (
                         <div className="flex flex-col items-center">
