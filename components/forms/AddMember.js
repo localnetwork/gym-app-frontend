@@ -2,8 +2,8 @@ import BaseApi from "@/lib/api/_base.api";
 
 import { useEffect, useState } from "react";
 
-import React from 'react'
-import Select from 'react-select' 
+import React from "react";
+import Select from "react-select";
 import modalState from "@/lib/store/modalState";
 import { toast } from "react-toastify";
 import errorsService from "@/lib/services/errorsService";
@@ -12,131 +12,140 @@ import useEntityState from "@/lib/store/entityState";
 import avatarService from "@/lib/services/avatar";
 import avatarColors from "@/lib/static-data/avatar-colors";
 import avatars from "@/lib/static-data/avatars";
-import persistentStore from "@/lib/store/persistentStore"; 
+import persistentStore from "@/lib/store/persistentStore";
 export default function AddMember() {
-  const profile = persistentStore((state) => state.profile); 
+  const profile = persistentStore((state) => state.profile);
   const [durations, setDurations] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);  
-  const [errors, setErrors] = useState({}); 
-  const [defaultInfo, setDefaultInfo] = useState(); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [defaultInfo, setDefaultInfo] = useState();
+  const [selectedImage, setSelectedImage] = useState(null);
   const [payload, setPayload] = useState({
     name: "",
     email: "",
     avatar: "",
     color: "",
-    role: null, 
+    role: null,
     password: "",
     confirm_password: "",
-  })
-  const { modalOpen, modalInfo, setModalInfo, editInfo, clearModal } = modalState((state) => ({
-    modalOpen: state.modalOpen,
-    modalInfo: state.modalInfo,
-    setModalInfo: state.setModalInfo,
-    clearModal: state.clearModal,
-    editInfo: state.editInfo,
-  })); 
+  });
+  const { modalOpen, modalInfo, setModalInfo, editInfo, clearModal } =
+    modalState((state) => ({
+      modalOpen: state.modalOpen,
+      modalInfo: state.modalInfo,
+      setModalInfo: state.setModalInfo,
+      clearModal: state.clearModal,
+      editInfo: state.editInfo,
+    }));
 
-  const { isMembersLoading, refetchMembers, addMember, addMemberErrors } = useEntityState((state) => ({
-    isMembersLoading: state.isMembersLoading,
-    refetchMembers: state.refetchMembers,
-    addMember: state.addMember,
-    addMemberErrors: state.addMemberErrors,
-  }));
- 
+  const { isMembersLoading, refetchMembers, addMember, addMemberErrors } =
+    useEntityState((state) => ({
+      isMembersLoading: state.isMembersLoading,
+      refetchMembers: state.refetchMembers,
+      addMember: state.addMember,
+      addMemberErrors: state.addMemberErrors,
+    }));
+
   const roles = [
     {
       roleRestrictions: [1],
-      label: "Admin", 
+      label: "Admin",
       value: 1,
-    }, 
+    },
     {
       roleRestrictions: [1],
       label: "Employee",
       value: 2,
-    }, 
+    },
     {
       roleRestrictions: [1, 2],
       label: "Member",
-      value: 3, 
-    }
-  ] 
+      value: 3,
+    },
+  ];
 
-  const filteredRoles = roles.filter((role) => role.roleRestrictions.includes(profile.role));
+  const filteredRoles = roles.filter((role) =>
+    role.roleRestrictions.includes(profile.role)
+  );
 
   const onSubmit = () => async (e) => {
+    console.log("submittt");
     e.preventDefault();
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
-    let { name, email, avatar, color, role, password, confirm_password } = payload;
-    role = parseInt(role, 10);  
-    const data = {
-      name, 
-      email,
-      avatar,  
-      color,
-      role,
-      password,
-      confirm_password,
-    }; 
- 
     try {
-      const res = await addMember(data); 
+      let { name, email, avatar, color, role, password, confirm_password } =
+        payload;
+      role = parseInt(role, 10);
+
+      const formData = new FormData();
+      formData.append("name", name || "");
+      formData.append("email", email || "");
+      formData.append("avatar", avatar || "");
+      formData.append("color", color || "");
+      formData.append("role", role || "");
+      formData.append("password", password || "");
+      formData.append("confirm_password", confirm_password || "");
+      formData.append(
+        "profile_picture",
+        e?.target?.profile_picture?.files[0] || ""
+      );
+      const data = {
+        name,
+        email,
+        avatar,
+        color,
+        role,
+        password,
+        confirm_password,
+      };
+
+      console.log("formData", formData);
+      // const res = await addMember(formData);
+      const res = await BaseApi.post(
+        process.env.NEXT_PUBLIC_API_URL + "/users",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (res.status === 200) {
         toast.success(`${res.data.message}`, {
-          position: "top-right", 
+          position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false, 
-          closeOnClick: true, 
+          hideProgressBar: false,
+          closeOnClick: true,
           pauseOnHover: true,
-          draggable: true, 
-          progress: undefined, 
-          theme: "light", 
-        }); 
-        setModalInfo({ modalInfo: "", })
-        modalState.setState({ modalOpen: false }) 
-        refetchMembers(); 
-        setIsSubmitting(false)
-      }  
-    }catch(error) {
-      console.log('error', error)
-      setIsSubmitting(false) 
-      if(error.status === 422) {
-        setErrors(error.data.errors);
-      } 
-    }
-    setErrors(addMemberErrors); 
-
-    console.log('addMemberErrors', addMemberErrors)
-    try {
-      const res = await BaseApi.post(process.env.NEXT_PUBLIC_API_URL + "/users", data);
-      if (res.status === 200) {
-        toast.success(`${res.data.message}`, {
-          position: "top-right", 
-          autoClose: 3000,
-          hideProgressBar: false, 
-          closeOnClick: true, 
-          pauseOnHover: true,
-          draggable: true, 
-          progress: undefined, 
-          theme: "light", 
-        }); 
-        setModalInfo({ modalInfo: "", })
-        modalState.setState({ modalOpen: false }) 
-        refetchMembers(); 
-        setIsSubmitting(false)
-      } 
-    } catch (error) {  
-      setIsSubmitting(false) 
-      if(error.status === 422) {
-        console.log('error.data.errors', error.data.errors)
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setModalInfo({ modalInfo: "" });
+        modalState.setState({ modalOpen: false });
+        refetchMembers();
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      if (error?.data?.errors) {
+        console.log("has errors");
+        console.log("error.data.errors", error.data.errors);
         setErrors(error.data.errors);
       }
     }
-  }
+  };
 
   const onChangeRegister = (data) => {
     setPayload({ ...payload, ...data });
-  }
+  };
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "profile_picture") {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
 
   return (
     <div>
@@ -148,17 +157,15 @@ export default function AddMember() {
             type="text"
             name="name"
             placeholder="Name"
-            onChange={(e) =>
-              onChangeRegister({ name: e?.target?.value })
-            }
+            onChange={(e) => onChangeRegister({ name: e?.target?.value })}
           />
           {errorsService.findError(errors, "name") && (
             <p className="mt-2 text-red-500 text-xs">
               {errorsService.findError(errors, "name").name}
             </p>
           )}
-        </div>  
-        
+        </div>
+
         <div className="form-item mb-[15px]">
           <input
             id="email"
@@ -166,16 +173,14 @@ export default function AddMember() {
             type="text"
             name="email"
             placeholder="Email"
-            onChange={(e) =>
-              onChangeRegister({ email: e?.target?.value })
-            }
+            onChange={(e) => onChangeRegister({ email: e?.target?.value })}
           />
           {errorsService.findError(errors, "email") && (
             <p className="mt-2 text-red-500 text-xs">
               {errorsService.findError(errors, "email").email}
             </p>
           )}
-        </div> 
+        </div>
 
         <div className="form-item mb-[15px]">
           <input
@@ -184,16 +189,14 @@ export default function AddMember() {
             type="password"
             name="password"
             placeholder="Password"
-            onChange={(e) =>
-              onChangeRegister({ password: e?.target?.value })
-            }
+            onChange={(e) => onChangeRegister({ password: e?.target?.value })}
           />
           {errorsService.findError(errors, "password") && (
             <p className="mt-2 text-red-500 text-xs">
               {errorsService.findError(errors, "password").password}
             </p>
           )}
-        </div> 
+        </div>
 
         <div className="form-item mb-[15px]">
           <input
@@ -208,39 +211,133 @@ export default function AddMember() {
           />
           {errorsService.findError(errors, "confirm_password") && (
             <p className="mt-2 text-red-500 text-xs">
-              {errorsService.findError(errors, "confirm_password").confirm_password}
+              {
+                errorsService.findError(errors, "confirm_password")
+                  .confirm_password
+              }
             </p>
           )}
-        </div>  
+        </div>
 
+        <div className="form-item mb-[15px]">
+          {selectedImage ? (
+            <>
+              <h3>Preview Profile Picture</h3>
+              <div className="relative inline-block">
+                <a
+                  className="inline-block hover:opacity-50"
+                  href={URL.createObjectURL(selectedImage)}
+                  target="_blank"
+                >
+                  <img
+                    src={URL.createObjectURL(selectedImage)}
+                    alt="Selected Profile Picture Preview"
+                    className="max-w-[300px] max-h-[200px] h-auto mt-2 mb-2 rounded-[5px]"
+                  />
+                </a>
+                <span
+                  className="absolute top-[15px] right-[15px] p-[5px] cursor-pointer bg-white hover:bg-blue-500 rounded-full"
+                  onClick={() => {
+                    setSelectedImage("");
+                    const input = document.getElementById("profile_picture");
+                    input.value = "";
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-5 hover:text-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
+
+          <div
+            className={`flex flex-wrap gap-[15px] ${
+              selectedImage ? "!hidden" : ""
+            }`}
+          >
+            <div className="w-full relative overflow-hidden">
+              <label
+                htmlFor="profile_picture"
+                className="w-full flex flex-col justify-center py-[30px] items-center gap-[15px] cursor-pointer block border border-dashed text-center border-[2px] w-full border-[#727272] p-[10px] rounded-[5px]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+                  />
+                </svg>
+                Click to Upload Profile Picture
+              </label>
+              <input
+                onChange={onChange}
+                accept="image/webp,image/jpeg,image/png,image/jpg,image/gif"
+                type="file"
+                name="profile_picture"
+                id="profile_picture"
+                className="opacity-0 absolute top-0 left-0 h-full cursor-pointer  w-full border border-dashed text-center border-[2px] w-full border-[#e7e7e7] p-[10px] rounded-[5px]"
+              />
+            </div>
+          </div>
+
+          {errorsService.findError(errors, "profile_picture") && (
+            <p className="mt-2 text-red-500 text-xs">
+              {
+                errorsService.findError(errors, "profile_picture")
+                  .profile_picture
+              }
+            </p>
+          )}
+        </div>
 
         <div className="form-item mb-[15px] select-none">
           <label>Select a role:</label>
 
           <div className="flex gap-[15px]">
-          {filteredRoles.map((item, index) => ( 
-            <div key={index} className="flex gap-[5px]">
-              <input
-                type="radio"
-                id={`role-${item.value}`}
-                name="role"
-                value={item.value}
-                onChange={(e) =>
-                  onChangeRegister({ role: parseInt(e?.target?.value) })
-                }
-                onKeyDown={(e) =>
-                  e?.key === "Enter" ? onRegisterTrigger() : null
-                }
-                checked={payload.role === item.value ? true : false}
-              />
-              <label
-                className="cursor-pointer"
-                htmlFor={`role-${item.value}`}
-              >
-                {item.label}
-              </label>
-            </div>
-          ))} 
+            {filteredRoles.map((item, index) => (
+              <div key={index} className="flex gap-[5px]">
+                <input
+                  type="radio"
+                  id={`role-${item.value}`}
+                  name="role"
+                  value={item.value}
+                  onChange={(e) =>
+                    onChangeRegister({ role: parseInt(e?.target?.value) })
+                  }
+                  onKeyDown={(e) =>
+                    e?.key === "Enter" ? onRegisterTrigger() : null
+                  }
+                  checked={payload.role === item.value ? true : false}
+                />
+                <label
+                  className="cursor-pointer"
+                  htmlFor={`role-${item.value}`}
+                >
+                  {item.label}
+                </label>
+              </div>
+            ))}
           </div>
           {errorsService.findError(errors, "role") && (
             <p className="mt-2 text-red-500 text-xs">
@@ -249,149 +346,127 @@ export default function AddMember() {
           )}
         </div>
 
-        <h2 className="text-[#000] text-[20px] font-bold">
-              Avatar Preview
-        </h2>
+        <h2 className="text-[#000] text-[20px] font-bold">Avatar Preview</h2>
 
-          <div className="avatar-preview">
-            {payload.avatar !== "" &&
-            payload.color !== "" ? (
-              <div
-                className="overflow-hidden text-[#333] inline-block rounded-full w-[100px] h-[100px] flex items-center justify-center mb-[30px] p-[15px]"
-                style={{
-                  backgroundColor: avatarService.findColor(
-                    payload.color
-                  ),
-                }}
-              >
-                {avatarService.findAvatar(payload.avatar)}
-              </div>
-            ) : (
-              <div className="text-[#7a7a7a]">{`There are no selections yet.`}</div>
-            )}
-          </div>
-
-            <div className="my-[30px] h-[1px] bg-[#dbdbdb]" />
-            <h2 className="text-[#000] text-[20px] font-bold ">
-              Pick a color
-            </h2>
-
-            {errorsService.findError(errors, "color") && (
-              <p className="text-red-500 text-xs">
-                {errorsService.findError(errors, "color").color}
-              </p>
-            )} 
-
+        <div className="avatar-preview">
+          {payload.avatar !== "" && payload.color !== "" ? (
             <div
-              className={`form-group mt-[30px] avatar-color-selections  flex gap-x-[15px] flex-wrap mb-[10px] ${
-                payload.color !== ""
-                  ? "has-avatar-color-selections" 
-                  : ""
-              }`}
+              className="overflow-hidden text-[#333] inline-block rounded-full w-[100px] h-[100px] flex items-center justify-center mb-[30px] p-[15px]"
+              style={{
+                backgroundColor: avatarService.findColor(payload.color),
+              }}
             >
-              {avatarColors.map((item, index) => (
-                <div
-                  className="avatar-color-item mb-[15px] max-w-[50px] w-full"
-                  key={index}
-                >
-                  <input
-                    type="radio"
-                    id={`color-${item.id}`}
-                    name="color"
-                    value={item.id}
-                    onChange={(e) =>
-                      onChangeRegister({ color: e?.target?.value })
-                    }
-                    onKeyDown={(e) =>
-                      e?.key === "Enter" ? onRegisterTrigger() : null
-                    }
-                    checked={
-                      payload.color === item.id ? true : false
-                    }
-                    className="hidden"
-                  />
-                  <label
-                    className={`cursor-pointer h-[50px] w-[50px] block rounded-full relative ${
-                      payload.color === item.id
-                        ? "border-[2px] border-black"
-                        : ""
-                    }`}
-                    htmlFor={`color-${item.id}`}
-                    style={{ backgroundColor: item.hex }}
-                  ></label>
-                </div>
-              ))}
+              {avatarService.findAvatar(payload.avatar)}
             </div>
+          ) : (
+            <div className="text-[#7a7a7a]">{`There are no selections yet.`}</div>
+          )}
+        </div>
 
-            <div className="my-[30px] h-[1px] bg-[#dbdbdb]" />
+        <div className="my-[30px] h-[1px] bg-[#dbdbdb]" />
+        <h2 className="text-[#000] text-[20px] font-bold ">Pick a color</h2>
 
-            <h2 className="text-[#000] text-[20px] font-bold">
-              Pick your avatar
-            </h2>
+        {errorsService.findError(errors, "color") && (
+          <p className="text-red-500 text-xs">
+            {errorsService.findError(errors, "color").color}
+          </p>
+        )}
 
-            {errorsService.findError(errors, "avatar") && (
-              <p className="text-red-500 text-xs">
-                {errorsService.findError(errors, "avatar").avatar}
-              </p>
-            )} 
+        <div
+          className={`form-group mt-[30px] avatar-color-selections  flex gap-x-[15px] flex-wrap mb-[10px] ${
+            payload.color !== "" ? "has-avatar-color-selections" : ""
+          }`}
+        >
+          {avatarColors.map((item, index) => (
             <div
-              className={`form-group mt-[30px] avatar-selections flex flex-wrap mb-[10px] ${
-                payload.avatar === "" ? "has-avatar-selections" : ""
-              }`}
+              className="avatar-color-item mb-[15px] max-w-[50px] w-full"
+              key={index}
             >
-              {avatars.map((item, index) => (
-                <div
-                  className="avatar-item mb-[15px] w-full max-w-[33.33%] xs:max-w-[25%] sm:max-w-[20%] md:max-w-[16.66%] px-[5px] w-full"
-                  key={index}
-                >
-                  <input
-                    type="radio"
-                    id={`avatar-${item.id}`}
-                    name="avatar"
-                    value={item.id}
-                    onChange={(e) =>
-                      onChangeRegister({ avatar: e?.target?.value })
-                    }
-                    onKeyDown={(e) =>
-                      e?.key === "Enter" ? onRegisterTrigger() : null
-                    }
-                    checked={payload.avatar === item.id ? true : false}
-                    className="hidden"
-                  />
-                  <label
-                    className="cursor-pointer"
-                    htmlFor={`avatar-${item.id}`}
-                  >
-                    {item.icon}
-                  </label>
-                </div>
-              ))}
-            </div> 
+              <input
+                type="radio"
+                id={`color-${item.id}`}
+                name="color"
+                value={item.id}
+                onChange={(e) => onChangeRegister({ color: e?.target?.value })}
+                onKeyDown={(e) =>
+                  e?.key === "Enter" ? onRegisterTrigger() : null
+                }
+                checked={payload.color === item.id ? true : false}
+                className="hidden"
+              />
+              <label
+                className={`cursor-pointer h-[50px] w-[50px] block rounded-full relative ${
+                  payload.color === item.id ? "border-[2px] border-black" : ""
+                }`}
+                htmlFor={`color-${item.id}`}
+                style={{ backgroundColor: item.hex }}
+              ></label>
+            </div>
+          ))}
+        </div>
+
+        <div className="my-[30px] h-[1px] bg-[#dbdbdb]" />
+
+        <h2 className="text-[#000] text-[20px] font-bold">Pick your avatar</h2>
+
+        {errorsService.findError(errors, "avatar") && (
+          <p className="text-red-500 text-xs">
+            {errorsService.findError(errors, "avatar").avatar}
+          </p>
+        )}
+        <div
+          className={`form-group mt-[30px] avatar-selections flex flex-wrap mb-[10px] ${
+            payload.avatar === "" ? "has-avatar-selections" : ""
+          }`}
+        >
+          {avatars.map((item, index) => (
+            <div
+              className="avatar-item mb-[15px] w-full max-w-[33.33%] xs:max-w-[25%] sm:max-w-[20%] md:max-w-[16.66%] px-[5px] w-full"
+              key={index}
+            >
+              <input
+                type="radio"
+                id={`avatar-${item.id}`}
+                name="avatar"
+                value={item.id}
+                onChange={(e) => onChangeRegister({ avatar: e?.target?.value })}
+                onKeyDown={(e) =>
+                  e?.key === "Enter" ? onRegisterTrigger() : null
+                }
+                checked={payload.avatar === item.id ? true : false}
+                className="hidden"
+              />
+              <label className="cursor-pointer" htmlFor={`avatar-${item.id}`}>
+                {item.icon}
+              </label>
+            </div>
+          ))}
+        </div>
 
         <button className="flex px-[30px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[20px] font-bold rounded-[6px] bg-[#009CFF] py-[10px] text-black text-uppercase w-full">
-        {isSubmitting && (
-                <svg
-                  className="animate-spin mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="#333"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="#000"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              )} 
-              {isSubmitting ? "Saving..." : "Submit"}
+          {isSubmitting && (
+            <svg
+              className="animate-spin mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="#333"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="#000"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          )}
+          {isSubmitting ? "Saving..." : "Submit"}
         </button>
       </form>
     </div>

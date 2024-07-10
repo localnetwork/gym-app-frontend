@@ -18,18 +18,18 @@ import DeleteDuration from "../forms/DeleteDuration";
 import CheckoutModalForm from "../forms/CheckoutModalForm";
 import ApproveOrder from "../forms/ApproveOrder";
 import RejectOrder from "../forms/RejectOrder";
+import OfferLogout from "../forms/OfferLogout";
 export default function Modal() {
-  const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } = modalState((state) => ({
-    modalOpen: state.modalOpen,
-    modalInfo: state.modalInfo,
-    setModalInfo: state.setModalInfo,
-    deleteInfo: state.deleteInfo,
-    setClearModal: state.setClearModal,
-  }));
-
+  const { modalOpen, modalInfo, setModalInfo, deleteInfo, setClearModal } =
+    modalState((state) => ({
+      modalOpen: state.modalOpen,
+      modalInfo: state.modalInfo,
+      setModalInfo: state.setModalInfo,
+      deleteInfo: state.deleteInfo,
+      setClearModal: state.setClearModal,
+    }));
 
   let form = null;
-  console.log('modalInfo.id', modalInfo.id)
   switch (modalInfo.id) {
     case "add-promo":
       form = <AddPromo />;
@@ -77,27 +77,29 @@ export default function Modal() {
       form = <CheckoutModalForm />;
       break;
     case "approve-order":
-      form = <ApproveOrder />
-      break; 
+      form = <ApproveOrder />;
+      break;
     case "cancel-order":
-      form = <RejectOrder />
-      break; 
+      form = <RejectOrder />;
+      break;
+    case "offer-logout":
+      form = <OfferLogout />;
+      break;
     default:
       form = null;
-  } 
- 
+  }
+
   useEffect(() => {
     if (modalOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; 
+      document.body.style.overflow = "auto";
       // modalState.setState({ modalOpen: false, deleteInfo: "",  modalInfo: "" });
-      setClearModal(); 
+      setClearModal();
     }
   }, [modalOpen]);
-  
 
-  if(modalOpen) {
+  if (modalOpen) {
     return (
       <div className="fixed flex justify-center items-center top-0 w-full h-full z-[200] p-[30px]">
         <span
@@ -111,11 +113,25 @@ export default function Modal() {
           <div className="bg-white p-[30px] text-[#121212] max-h-[calc(100dvh-60px)] overflow-y-auto">
             <div className="relative flex justify-between">
               <h1 className="font-black text-[30px] mb-3">{modalInfo.title}</h1>
-              <span className="cursor-pointer" onClick={() => {
-                setClearModal() 
-              }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  setClearModal();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
                 </svg>
               </span>
             </div>
