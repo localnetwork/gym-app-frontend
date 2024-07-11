@@ -70,16 +70,22 @@ export default function UserInfo() {
                     >
                       {subscriptionStatus}
                     </span>
-                    {helper.daysFormatter(
-                      publicProfile?.subscription.remainingDays
-                    )}{" "}
-                    left
+
+                    {publicProfile?.subscription.remainingDays && (
+                      <>
+                        {helper.daysFormatter(
+                          publicProfile?.subscription.remainingDays
+                        )}{" "}
+                        left
+                      </>
+                    )}
                   </div>
                 </div>
               )}
 
               <Link
                 target="_blank"
+                className="inline-block"
                 href={
                   process.env.NEXT_PUBLIC_API_URL +
                   publicProfile?.profile_picture
