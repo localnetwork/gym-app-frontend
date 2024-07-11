@@ -34,7 +34,10 @@ ChartJS.register(
   Legend
 );
 
+import persistentStore from "@/lib/store/persistentStore";
+
 export default function Orders() {
+  const profile = persistentStore((state) => state.profile);
   const {
     orders,
     isOrdersLoading,
@@ -174,15 +177,19 @@ export default function Orders() {
             >
               Orders
             </h1>
-            {orders?.length > 0 && (
-              <CSVLink
-                data={formattedData}
-                headers={csvHeaders}
-                filename={filename}
-                className="inline-flex max-w-[150px] px-[10px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
-              >
-                Export Sales
-              </CSVLink>
+            {profile?.role === 1 && (
+              <>
+                {orders?.length > 0 && (
+                  <CSVLink
+                    data={formattedData}
+                    headers={csvHeaders}
+                    filename={filename}
+                    className="inline-flex max-w-[150px] px-[10px] items-center justify-center hover:bg-[#009CFF] text-center cursor-pointer text-[15px] font-bold rounded-[6px] bg-green-500 py-[10px] text-black text-uppercase w-full"
+                  >
+                    Export Sales
+                  </CSVLink>
+                )}
+              </>
             )}
           </div>
 
