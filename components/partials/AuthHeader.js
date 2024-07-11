@@ -8,7 +8,7 @@ import Image from "next/image";
 import authService from "@/lib/services/authService";
 export default function AuthHeader({ profile }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
   const menuLinks = [
     {
       name: "Plans",
@@ -19,40 +19,39 @@ export default function AuthHeader({ profile }) {
       name: "Promos",
       url: "/member-plans",
       roleRestrictions: [3],
-    }, 
-    { 
+    },
+    {
       name: "Members",
       url: "/users",
-      roleRestrictions: [1,2],
-    }, 
-    { 
+      roleRestrictions: [1, 2],
+    },
+    {
       name: "Non-members",
       url: "/non-members",
-      roleRestrictions: [1,2],
+      roleRestrictions: [1, 2],
     },
     {
       name: "Orders",
-      url: '/orders',
-      roleRestrictions: [1],
-    }, 
+      url: "/orders",
+      roleRestrictions: [1, 2],
+    },
     {
       name: "Durations",
       url: "/durations",
       roleRestrictions: [1],
     },
     {
-      name: "Contact Us", 
-      url: "/contact", 
-    }, 
-  ]
+      name: "Contact Us",
+      url: "/contact",
+    },
+  ];
 
   const filteredMenuLinks = menuLinks.filter((item) => {
-    return !item.roleRestrictions || item.roleRestrictions.includes(profile.role);
+    return (
+      !item.roleRestrictions || item.roleRestrictions.includes(profile.role)
+    );
   });
 
-
-
-  
   const logoutHandler = async () => {
     setIsDropdownOpen(false);
     try {
@@ -62,14 +61,18 @@ export default function AuthHeader({ profile }) {
       console.error("Error", error);
     }
   };
-  
-  const role = authService.getRole(profile?.role); 
- 
+
+  const role = authService.getRole(profile?.role);
+
   return (
     <header className="bg-[#000] relative shadow-[0_4px_8px_0_rgba(0,0,0,0.2)]">
       <div className="container relative mx-auto py-4 flex justify-between items-center">
         <div className="">
-          <Link href="/" className="flex items-center" onClick={() => setIsDropdownOpen(false)}>
+          <Link
+            href="/"
+            className="flex items-center"
+            onClick={() => setIsDropdownOpen(false)}
+          >
             <Image src="/logo-white.webp" alt="alt" width={70} height={70} />
             <Image
               src="/logo-text.webp"
@@ -81,18 +84,20 @@ export default function AuthHeader({ profile }) {
           </Link>
         </div>
         <div>
-            {/* <Link href="/trainings">Trainings</Link> */}
-            {filteredMenuLinks.map((link, index) => (
-              <Link
-                key={index}
-                href={link.url}
-                onClick={() => setIsDropdownOpen(false)}
-                className={`${router.asPath == link.url ? '!text-[#009CFF]' : ''} text-white text-[20px] font-bold cursor-pointer hover:text-[#009CFF] px-[20px]`}
-              >
-                {link.name}
-              </Link>
-            ))} 
-          </div>  
+          {/* <Link href="/trainings">Trainings</Link> */}
+          {filteredMenuLinks.map((link, index) => (
+            <Link
+              key={index}
+              href={link.url}
+              onClick={() => setIsDropdownOpen(false)}
+              className={`${
+                router.asPath == link.url ? "!text-[#009CFF]" : ""
+              } text-white text-[20px] font-bold cursor-pointer hover:text-[#009CFF] px-[20px]`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
         <div className="relative">
           <div className="flex items-center gap-x-[5px]">
             {profile.avatar ? (
@@ -133,8 +138,6 @@ export default function AuthHeader({ profile }) {
             </svg>
           </div>
 
-          
-
           <div
             className={`dropdown-info ${
               isDropdownOpen ? "active" : ""
@@ -155,9 +158,24 @@ export default function AuthHeader({ profile }) {
 
             <div className="border-b border-gray-200" />
 
-            <Link onClick={() => setIsDropdownOpen(false)} className="cursor-pointer hover:bg-[#f3f3f3] p-2 flex items-center gap-x-[5px]" href="/profile">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            <Link
+              onClick={() => setIsDropdownOpen(false)}
+              className="cursor-pointer hover:bg-[#f3f3f3] p-2 flex items-center gap-x-[5px]"
+              href="/profile"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                />
               </svg>
               Profile
             </Link>
