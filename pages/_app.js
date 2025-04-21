@@ -11,8 +11,8 @@ import modalState from "@/lib/store/modalState";
 
 const TOKEN = process.env.NEXT_PUBLIC_TOKEN || "";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import authService from "@/lib/services/authService";
 import { useRouter } from "next/router";
 export default function App({ Component, pageProps }) {
@@ -25,20 +25,18 @@ export default function App({ Component, pageProps }) {
   const cookies = parseCookies();
   const token = cookies[TOKEN];
 
-
-
   useEffect(() => {
-    if(token) {
-      authService.refetchProfile();   
-    }   
-  }, [token, authService]);  
+    if (token) {
+      authService.refetchProfile();
+    }
+  }, [token, authService]);
 
   return (
     <Layout profile={profile}>
       <Component {...pageProps} />
 
       <Modal />
-      <ToastContainer /> 
+      <ToastContainer />
     </Layout>
   );
 }

@@ -39,6 +39,8 @@ export default function Members() {
     refetchMembers();
   }, [refetchMembers]);
 
+  console.log("members", members);
+
   return (
     <div className="py-[30px]">
       <Head>
